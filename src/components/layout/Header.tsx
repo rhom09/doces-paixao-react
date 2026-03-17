@@ -1,22 +1,26 @@
 import { useState } from 'react'
+import { Link, NavLink, useLocation } from 'react-router-dom'
 import { useScrollPosition } from '@/hooks/useScrollPosition'
-import { Button } from '@/components/ui/Button'
 import { cn } from '@/utils/cn'
 
 const NAV_LINKS = [
-  { label: 'Início',     href: '#inicio' },
-  { label: 'Sobre',      href: '#sobre' },
-  { label: 'Cardápio',   href: '#produtos' },
-  { label: 'Galeria',    href: '#galeria' },
-  { label: 'Avaliações', href: '#depoimentos' },
+  { label: 'Início',     href: '/',         exact: true },
+  { label: 'Cardápio',   href: '/cardapio', exact: false },
+  { label: 'Sobre',      href: '/sobre',    exact: false },
 ]
 
 export function Header() {
-  const scrollY   = useScrollPosition()
-  const scrolled  = scrollY > 60
+  const scrollY  = useScrollPosition()
+  const scrolled = scrollY > 60
   const [open, setOpen] = useState(false)
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
 
   function closeMenu() { setOpen(false) }
+
+  const textColor = scrolled || !isHome
+    ? 'text-muted hover:text-rose'
+    : 'text-white/85 hover:text-white'
 
   return (
     <header
@@ -31,7 +35,7 @@ export function Header() {
         <nav className="flex items-center justify-between gap-8">
 
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5">
+          <Link to="/" className="flex items-center gap-2.5">
             <span
               className={cn(
                 'flex h-9 w-9 items-center justify-center rounded-[10px] text-sm backdrop-blur-sm transition-all',
@@ -43,38 +47,44 @@ export function Header() {
             <span
               className={cn(
                 'font-display text-[1.65rem] font-bold -tracking-[0.01em] transition-colors',
-                scrolled ? 'text-ink' : 'text-white'
+                scrolled || !isHome ? 'text-ink' : 'text-white'
               )}
             >
               Doces{' '}
-              <em className={cn('not-italic', scrolled ? 'text-rose' : 'text-rose-light')}>
+              <em className={cn('not-italic', scrolled ? 'text-rose' : isHome ? 'text-rose-light' : 'text-rose')}>
                 Paixão
               </em>
             </span>
-          </a>
+          </Link>
 
           {/* Desktop nav */}
           <ul className="hidden items-center gap-9 md:flex">
-            {NAV_LINKS.map(({ label, href }) => (
+            {NAV_LINKS.map(({ label, href, exact }) => (
               <li key={href}>
-                <a
-                  href={href}
-                  className={cn(
-                    'relative text-[0.88rem] font-medium tracking-[0.02em] transition-colors',
-                    'after:absolute after:-bottom-1 after:left-0 after:h-[1.5px] after:w-0',
-                    'after:rounded-sm after:bg-rose after:transition-all after:duration-300',
-                    'hover:after:w-full',
-                    scrolled ? 'text-muted hover:text-rose' : 'text-white/85 hover:text-white'
-                  )}
+                <NavLink
+                  to={href}
+                  end={exact}
+                  className={({ isActive }) =>
+                    cn(
+                      'relative text-[0.88rem] font-medium tracking-[0.02em] transition-colors',
+                      'after:absolute after:-bottom-1 after:left-0 after:h-[1.5px] after:w-0',
+                      'after:rounded-sm after:bg-rose after:transition-all after:duration-300',
+                      'hover:after:w-full',
+                      isActive ? 'after:!w-full text-rose' : textColor
+                    )
+                  }
                 >
                   {label}
-                </a>
+                </NavLink>
               </li>
             ))}
             <li>
-              <Button as="a" href="#contato" size="sm">
+              <Link
+                to="/encomenda"
+                className="inline-flex items-center rounded-2xl bg-rose px-5 py-2.5 text-[0.85rem] font-semibold text-white shadow-[0_4px_16px_rgba(196,86,107,0.3)] transition-all hover:-translate-y-0.5 hover:bg-rose-deep"
+              >
                 Encomendar
-              </Button>
+              </Link>
             </li>
           </ul>
 
@@ -89,7 +99,7 @@ export function Header() {
                 key={i}
                 className={cn(
                   'block h-0.5 w-6.5 rounded-sm transition-all',
-                  scrolled ? 'bg-ink' : 'bg-white'
+                  scrolled || !isHome ? 'bg-ink' : 'bg-white'
                 )}
               />
             ))}
@@ -101,21 +111,31 @@ export function Header() {
       {open && (
         <div className="absolute left-0 right-0 top-full z-50 rounded-b-3xl bg-cream/97 px-7 py-6 shadow-md backdrop-blur-xl md:hidden">
           <ul className="flex flex-col gap-4">
-            {NAV_LINKS.map(({ label, href }) => (
+            {NAV_LINKS.map(({ label, href, exact }) => (
               <li key={href}>
-                <a
-                  href={href}
-                  className="block text-base font-medium text-ink transition-colors hover:text-rose"
+                <NavLink
+                  to={href}
+                  end={exact}
                   onClick={closeMenu}
+                  className={({ isActive }) =>
+                    cn(
+                      'block text-base font-medium transition-colors',
+                      isActive ? 'text-rose' : 'text-ink hover:text-rose'
+                    )
+                  }
                 >
                   {label}
-                </a>
+                </NavLink>
               </li>
             ))}
             <li className="pt-2">
-              <Button as="a" href="#contato" size="sm" className="w-full justify-center" onClick={closeMenu}>
+              <Link
+                to="/encomenda"
+                onClick={closeMenu}
+                className="block w-full rounded-2xl bg-rose py-3 text-center font-semibold text-white shadow-[0_4px_16px_rgba(196,86,107,0.3)] transition-all hover:bg-rose-deep"
+              >
                 Encomendar
-              </Button>
+              </Link>
             </li>
           </ul>
         </div>
