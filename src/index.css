@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Globals ──────────────────────────────────────────────── */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    @apply bg-canvas text-ink antialiased;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Cormorant Garamond', serif;
+  }
+}
+
+/* ── Utilitários personalizados ──────────────────────────── */
+@layer utilities {
+  /* Gradiente de texto */
+  .text-gradient-rose {
+    background: linear-gradient(135deg, theme('colors.rose.light') 0%, #f9a8b8 50%, theme('colors.mint.light') 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Noise grain overlay */
+  .bg-grain {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 256px;
+  }
+
+  /* Padrão xadrez para CTA */
+  .bg-crosshatch {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+/* ── Reveal animation ────────────────────────────────────── */
+@layer components {
+  .reveal {
+    @apply opacity-0 translate-y-8 transition-all duration-700 ease-out;
+  }
+  .reveal.visible {
+    @apply opacity-100 translate-y-0;
+  }
+  .reveal-left {
+    @apply opacity-0 -translate-x-8 transition-all duration-700 ease-out;
+  }
+  .reveal-left.visible {
+    @apply opacity-100 translate-x-0;
+  }
+  .reveal-right {
+    @apply opacity-0 translate-x-8 transition-all duration-700 ease-out;
+  }
+  .reveal-right.visible {
+    @apply opacity-100 translate-x-0;
+  }
+}
