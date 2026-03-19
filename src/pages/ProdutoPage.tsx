@@ -1,10 +1,13 @@
 import { useParams, Link, Navigate } from 'react-router-dom'
-import { PRODUCTS } from '@/data/produtos'
+import { PRODUCT_BY_ID_QUERY, SITE_SETTINGS_QUERY } from '@/lib/queries'
+import { useSanity } from '@/hooks/useSanity'
+import { Skeleton } from '@/components/ui/SkeletonCard'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { RevealWrapper } from '@/components/ui/index'
 import { cn } from '@/utils/cn'
 import { useState } from 'react'
+import type { Product, SiteSettings } from '@/types'
 
 const tagConfig = {
   bestseller: { label: '⭐ Mais Vendido', className: 'bg-rose/90 text-white' },
@@ -24,9 +27,36 @@ function getGallery(imageUrl: string) {
 
 export default function ProdutoPage() {
   const { id } = useParams<{ id: string }>()
-  const product = PRODUCTS.find((p) => p.id === Number(id))
+  const { data: product, loading: loadingProduct } = useSanity<Product>(PRODUCT_BY_ID_QUERY, { id })
+  const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
 
   const [activeImg, setActiveImg] = useState(0)
+
+  if (loadingProduct) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen bg-canvas pt-28">
+          <div className="container mx-auto max-w-[1180px] px-7 py-16">
+            <Skeleton className="mb-10 h-6 w-48" />
+            <div className="grid gap-16 lg:grid-cols-2">
+              <Skeleton className="aspect-[4/3] w-full rounded-[28px]" />
+              <div className="space-y-6">
+                <Skeleton className="h-6 w-24 rounded-full" />
+                <Skeleton className="h-12 w-3/4 rounded-lg" />
+                <Skeleton className="h-24 w-full rounded-lg" />
+                <div className="space-y-3">
+                  {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-5 w-1/2" />)}
+                </div>
+                <Skeleton className="h-16 w-full rounded-2xl" />
+              </div>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </>
+    )
+  }
 
   if (!product) return <Navigate to="/404" replace />
 
@@ -121,7 +151,7 @@ export default function ProdutoPage() {
                   <i className="fas fa-inbox mr-2" /> Fazer Encomenda
                 </Link>
                 <a
-                  href={`https://wa.me/5511999999999?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.name)}`}
+                  href={`https://wa.me/${settings?.phone || '5511999999999'}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.name)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 rounded-2xl border border-[#25d366] px-5 py-3.5 font-medium text-[#25d366] transition-all hover:bg-[#25d366] hover:text-white"

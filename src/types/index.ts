@@ -2,7 +2,7 @@
 export type ProductTag = 'bestseller' | 'novo' | 'premium' | null
 
 export interface Product {
-  id: number
+  id: string
   name: string
   category: 'Bolos' | 'Docinhos' | 'Tortas' | 'Especiais'
   description: string
@@ -15,7 +15,7 @@ export interface Product {
 
 // ── Depoimento ───────────────────────────────────────────────
 export interface Testimonial {
-  id: number
+  id: string
   text: string
   authorName: string
   authorRole: string
@@ -54,3 +54,17 @@ export interface GalleryItem {
 
 // ── Tabs ─────────────────────────────────────────────────────
 export type ProductTab = 'Todos' | 'Bolos' | 'Docinhos' | 'Tortas' | 'Especiais'
+
+// ── Site Settings ────────────────────────────────────────────
+export interface SocialLink {
+  platform: string
+  url: string
+  icon: string
+}
+
+export interface SiteSettings {
+  phone: string
+  address: string
+  email: string
+  socialLinks: SocialLink[]
+}

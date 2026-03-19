@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PRODUCTS } from '@/data/produtos'
+import { ALL_PRODUCTS_QUERY } from '@/lib/queries'
+import { useSanity } from '@/hooks/useSanity'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
+import { SkeletonCard } from '@/components/ui/SkeletonCard'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { cn } from '@/utils/cn'
-import type { ProductTab, ProductTag } from '@/types'
+import type { ProductTab, ProductTag, Product } from '@/types'
 
 const TABS: ProductTab[] = ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais']
 
@@ -31,9 +33,11 @@ export default function CardapioPage() {
   const [search, setSearch] = useState('')
   const [priceIdx, setPriceIdx] = useState(0)
 
+  const { data: products, loading } = useSanity<Product[]>(ALL_PRODUCTS_QUERY)
+
   const range = PRICE_RANGES[priceIdx]
 
-  const filtered = PRODUCTS.filter((p) => {
+  const filtered = (products || []).filter((p) => {
     const matchTab = activeTab === 'Todos' || p.category === activeTab
     const matchSearch = p.name.toLowerCase().includes(search.toLowerCase())
     const price = parsePrice(p.price)
@@ -113,7 +117,13 @@ export default function CardapioPage() {
           </p>
 
           {/* Grid */}
-          {filtered.length === 0 ? (
+          {loading ? (
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="flex flex-col items-center gap-4 py-24 text-center">
               <span className="text-5xl">🔍</span>
               <p className="text-[1rem] text-muted">Nenhum produto encontrado com esses filtros.</p>

@@ -1,9 +1,12 @@
+import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
+import { useSanity } from '@/hooks/useSanity'
+import { Skeleton } from '@/components/ui/SkeletonCard'
 import { LabelTag, SectionHead, RevealWrapper, Stars } from '@/components/ui/index'
 import { Button } from '@/components/ui/Button'
 import { DIFERENCIAIS } from '@/data/diferenciais'
 import { GALLERY_ITEMS } from '@/data/stats'
-import { TESTIMONIALS } from '@/data/depoimentos'
 import { cn } from '@/utils/cn'
+import type { Testimonial } from '@/types'
 
 // ── Diferenciais ──────────────────────────────────────────────
 const iconColors = [
@@ -109,6 +112,8 @@ const topBarColors = [
 ]
 
 export function Depoimentos() {
+  const { data: testimonials, loading } = useSanity<Testimonial[]>(ALL_TESTIMONIALS_QUERY)
+
   return (
     <section className="bg-canvas py-[120px]" id="depoimentos">
       <div className="container mx-auto max-w-[1180px] px-7">
@@ -122,7 +127,22 @@ export function Depoimentos() {
         </RevealWrapper>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {TESTIMONIALS.map((t, i) => (
+          {loading ? (
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="rounded-[28px] border border-border-soft bg-white p-8 shadow-sm">
+                <Skeleton className="mb-4 h-12 w-12" />
+                <Skeleton className="mb-4 h-4 w-3/4" />
+                <Skeleton className="mb-6 h-20 w-full" />
+                <div className="flex items-center gap-3 border-t border-border-soft pt-5">
+                  <Skeleton className="h-11 w-11 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-3 w-1/3" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (testimonials || []).map((t, i) => (
             <RevealWrapper
               key={t.id}
               delay={i * 80}

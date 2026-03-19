@@ -1,3 +1,7 @@
+import { SITE_SETTINGS_QUERY } from '@/lib/queries'
+import { useSanity } from '@/hooks/useSanity'
+import type { SiteSettings } from '@/types'
+
 const QUICK_LINKS = [
   { label: 'Início',     href: '#inicio' },
   { label: 'Sobre Nós',  href: '#sobre' },
@@ -14,15 +18,15 @@ const SCHEDULE = [
   { day: 'Feriados',        hours: 'Consultar' },
 ]
 
-const SOCIALS = [
-  { label: 'Instagram', icon: 'fab fa-instagram', href: '#' },
-  { label: 'Facebook',  icon: 'fab fa-facebook-f', href: '#' },
-  { label: 'WhatsApp',  icon: 'fab fa-whatsapp', href: '#' },
-  { label: 'TikTok',    icon: 'fab fa-tiktok', href: '#' },
-  { label: 'Pinterest', icon: 'fab fa-pinterest-p', href: '#' },
-]
-
 export function Footer() {
+  const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
+
+  const socials = settings?.socialLinks || [
+    { platform: 'Instagram', icon: 'fab fa-instagram', url: '#' },
+    { platform: 'Facebook',  icon: 'fab fa-facebook-f', url: '#' },
+    { platform: 'WhatsApp',  icon: 'fab fa-whatsapp', url: '#' },
+  ]
+
   function handleNewsletter(e: React.FormEvent) {
     e.preventDefault()
     const form = e.target as HTMLFormElement
@@ -56,16 +60,17 @@ export function Footer() {
             <p className="text-[0.875rem] leading-[1.85] text-white/45">
               Transformando momentos em memórias doces desde 2014. Confeitaria artesanal
               com paixão em cada detalhe, ingrediente e criação.
+              {settings?.address && <span className="mt-2 block italic opacity-70">{settings.address}</span>}
             </p>
             <div className="mt-6 flex gap-2.5">
-              {SOCIALS.map(({ label, icon, href }) => (
+              {socials.map((social) => (
                 <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
+                  key={social.platform}
+                  href={social.url}
+                  aria-label={social.platform}
                   className="flex h-9.5 w-9.5 items-center justify-center rounded-[10px] bg-white/7 text-white/50 text-[0.9rem] transition-all hover:bg-rose hover:text-white"
                 >
-                  <i className={icon} />
+                  <i className={social.icon} />
                 </a>
               ))}
             </div>
