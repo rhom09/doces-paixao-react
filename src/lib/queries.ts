@@ -1,4 +1,4 @@
-export const ALL_PRODUCTS_QUERY = `*[_type == "product" && active == true] {
+export const ALL_PRODUCTS_QUERY = `*[_type == "product" && active == true] | order(_createdAt asc) {
   "id": _id,
   name,
   category,
@@ -20,12 +20,13 @@ export const PRODUCT_BY_ID_QUERY = `*[_type == "product" && _id == $id][0] {
   "imageAlt": name
 }`
 
-export const ALL_TESTIMONIALS_QUERY = `*[_type == "testimonial"] | order(_createdAt desc) {
+export const ALL_TESTIMONIALS_QUERY = `*[_type == "testimonial"] | order(rating desc) {
   "id": _id,
   text,
   authorName,
   authorRole,
   "avatarUrl": avatar.asset->url,
+  avatar,
   rating
 }`
 

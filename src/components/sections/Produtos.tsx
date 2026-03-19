@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
-import { PRODUCTS } from '@/data/produtos'
 import type { Product, ProductTab, ProductTag } from '@/types'
 import { cn } from '@/utils/cn'
+
+import { ALL_PRODUCTS_QUERY } from '@/lib/queries'
+import { useSanity } from '@/hooks/useSanity'
+import { urlFor } from '@/lib/sanity'
+import { SkeletonCard } from '@/components/ui/SkeletonCard'
 
 const TABS: ProductTab[] = ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais']
 
@@ -24,7 +28,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       {/* Image */}
       <div className="relative h-60 overflow-hidden">
         <img
-          src={product.imageUrl}
+          src={product.image ? urlFor(product.image).url() : product.imageUrl}
           alt={product.imageAlt}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.07]"
         />
@@ -76,11 +80,12 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 }
 
 export function Produtos() {
+  const { data: products, loading, error } = useSanity<Product[]>(ALL_PRODUCTS_QUERY)
   const [activeTab, setActiveTab] = useState<ProductTab>('Todos')
 
   const filtered = activeTab === 'Todos'
-    ? PRODUCTS
-    : PRODUCTS.filter((p) => p.category === activeTab)
+    ? products || []
+    : (products || []).filter((p) => p.category === activeTab)
 
   return (
     <section className="bg-canvas py-[120px]" id="produtos">
@@ -113,12 +118,19 @@ export function Produtos() {
           ))}
         </RevealWrapper>
 
-        {/* Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((product, i) => (
-            <ProductCard key={product.id} product={product} index={i} />
-          ))}
-        </div>
+        {error ? (
+          <p className="py-10 text-center text-red-500">Erro ao carregar os produtos.</p>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {loading ? (
+              Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
+            ) : (
+              filtered.map((product, i) => (
+                <ProductCard key={product.id} product={product} index={i} />
+              ))
+            )}
+          </div>
+        )}
 
       </div>
     </section>

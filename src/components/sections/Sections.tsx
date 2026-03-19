@@ -1,5 +1,6 @@
 import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
+import { urlFor } from '@/lib/sanity'
 import { Skeleton } from '@/components/ui/SkeletonCard'
 import { LabelTag, SectionHead, RevealWrapper, Stars } from '@/components/ui/index'
 import { Button } from '@/components/ui/Button'
@@ -156,7 +157,7 @@ export function Depoimentos() {
               <p className="mb-6 text-[0.92rem] italic leading-[1.85] text-ink-soft">{t.text}</p>
               <div className="flex items-center gap-3 border-t border-border-soft pt-5">
                 <img
-                  src={t.avatarUrl}
+                  src={t.avatar ? urlFor(t.avatar).url() : t.avatarUrl}
                   alt={t.authorName}
                   className="h-11 w-11 rounded-full border-[2.5px] border-rose-light object-cover"
                 />

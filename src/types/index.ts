@@ -9,6 +9,7 @@ export interface Product {
   price: string
   priceNote?: string
   imageUrl: string
+  image?: any
   imageAlt: string
   tag: ProductTag
 }
@@ -20,6 +21,7 @@ export interface Testimonial {
   authorName: string
   authorRole: string
   avatarUrl: string
+  avatar?: any
   rating: number // 1–5, suporta .5
 }
 
