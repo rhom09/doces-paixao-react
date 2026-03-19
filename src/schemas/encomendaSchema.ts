@@ -11,9 +11,8 @@ export const step1Schema = z.object({
 
 // Step 2: Your Order
 export const step2Schema = z.object({
-  productType: z.enum(['Bolo', 'Cupcakes', 'Docinhos', 'Torta', 'Especial'], {
-    required_error: 'Selecione um tipo de produto',
-    invalid_type_error: 'Selecione um tipo de produto',
+  productType: z.enum(PRODUCT_TYPES, {
+    errorMap: () => ({ message: 'Selecione um tipo de produto' }),
   }),
   quantity: z.string().min(2, 'Mínimo de 2 caracteres'),
   eventDate: z.string().refine((val) => {
