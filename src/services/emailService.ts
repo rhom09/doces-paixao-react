@@ -28,22 +28,35 @@ export async function sendContactForm(data: ContactFormData): Promise<void> {
 
 export async function sendOrderForm(data: OrderFormData): Promise<void> {
   try {
+    const messageContent = `
+      --- DADOS DO CLIENTE ---
+      Nome: ${data.name}
+      WhatsApp: ${data.phone}
+      E-mail: ${data.email}
+
+      --- PEDIDO ---
+      Tipo: ${data.productType}
+      Quantidade: ${data.quantity}
+      Data do Evento: ${data.eventDate}
+      Tema/Ocasião: ${data.theme}
+
+      --- PERSONALIZAÇÃO ---
+      Sabores: ${data.flavors.join(', ')}
+      Restrições: ${data.restrictions?.join(', ') || 'Nenhuma'}
+      Mensagem p/ Embalagem: ${data.message || 'N/A'}
+
+      --- CONFIRMAÇÃO ---
+      Termos aceitos: ${data.termsAccepted ? 'SIM' : 'NÃO'}
+    `;
+
     await emailjs.send(
       SERVICE_ID,
       TEMPLATE_ID,
       {
         from_name: data.name,
         phone: data.phone,
-        subject: `Nova Encomenda: ${data.category}`,
-        message: `
-          Produto: ${data.productName || 'N/A'} (ID: ${data.productId})
-          Categoria: ${data.category}
-          Tamanho: ${data.size}
-          Sabor: ${data.flavor}
-          Data: ${data.date}
-          Quantidade: ${data.qty}
-          Mensagem: ${data.message}
-        `,
+        subject: `🍰 NOVA ENCOMENDA: ${data.productType} - ${data.name}`,
+        message: messageContent,
       },
       PUBLIC_KEY
     );

@@ -7,14 +7,15 @@ export interface ContactFormData {
 }
 
 export interface OrderFormData {
-  category: string;
-  productId: number | null;
-  productName?: string;
-  size: string;
-  flavor: string;
-  date: string;
-  qty: string;
   name: string;
+  email: string;
   phone: string;
-  message: string;
+  productType: string;
+  quantity: number;
+  eventDate: string;
+  theme: string;
+  flavors: string[];
+  restrictions?: string[];
+  message?: string;
+  termsAccepted: boolean;
 }
