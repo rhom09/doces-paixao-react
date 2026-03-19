@@ -142,4 +142,34 @@ Nenhum runtime extra além do React. ✔️
 
 ---
 
+## 🚀 Deploy (Vercel)
+
+Este projeto está configurado para um deploy profissional na **Vercel**.
+
+### 1. Variáveis de Ambiente
+Configure as seguintes variáveis no painel da Vercel (`Settings > Environment Variables`):
+
+| Variável | Descrição |
+|---|---|
+| `VITE_EMAILJS_SERVICE_ID` | ID do serviço do EmailJS |
+| `VITE_EMAILJS_TEMPLATE_ID` | ID do template do EmailJS |
+| `VITE_EMAILJS_PUBLIC_KEY` | Chave pública do EmailJS |
+| `VITE_SANITY_PROJECT_ID` | ID do seu projeto no Sanity.io |
+| `VITE_SANITY_DATASET` | Nome do dataset (ex: `production`) |
+
+### 2. Configuração de CORS no Sanity
+Para que o site consiga buscar os dados, você deve autorizar o domínio do seu deploy:
+1. Acesse o [Painel do Sanity](https://www.sanity.io/manage)
+2. Vá em **API > CORS Origins**
+3. Adicione o domínio da Vercel (ex: `https://doces-paixao.vercel.app`)
+4. Marque a opção **Allow credentials**
+
+### 3. Build & Caching
+O arquivo `vercel.json` já configura:
+- **SPA Rewrites**: Garante que o React Router funcione corretamente.
+- **Headers de Segurança**: Proteção contra Clickjacking e Sniffing.
+- **Smart Caching**: Cache de 1 ano para assets estáticos e 0 segundos para o `index.html`.
+
+---
+
 *Desenvolvido com ❤️ e muito 🧁*
