@@ -20,5 +20,9 @@ export function usePhoneMask(initial = '') {
     setValue(v)
   }
 
-  return { value, onChange }
+  function reset() {
+    setValue('')
+  }
+
+  return { value, onChange, reset }
 }

@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer'
 import { RevealWrapper, LabelTag, SectionHead } from '@/components/ui/index'
 import { PRODUCTS } from '@/data/produtos'
 import { cn } from '@/utils/cn'
+import { sendOrderForm } from '@/services/emailService'
 
 type Step = 1 | 2 | 3
 
@@ -57,15 +58,41 @@ export default function EncomendaPage() {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [message, setMessage] = useState('')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [submitted, setSubmitted] = useState(false)
 
   const productsByCategory = category
     ? PRODUCTS.filter((p) => p.category === category)
     : []
 
-  function handleSubmit(e: React.FormEvent) {
+  const selectedProduct = PRODUCTS.find(p => p.id === productId)
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setSubmitted(true)
+    if (status === 'loading' || status === 'success') return
+
+    setStatus('loading')
+
+    try {
+      await sendOrderForm({
+        category,
+        productId,
+        productName: selectedProduct?.name,
+        size,
+        flavor,
+        date,
+        qty,
+        name,
+        phone,
+        message,
+      })
+      setStatus('success')
+      setSubmitted(true)
+    } catch (error) {
+      console.error(error)
+      setStatus('error')
+      setTimeout(() => setStatus('idle'), 5000)
+    }
   }
 
   if (submitted) {
@@ -268,19 +295,34 @@ export default function EncomendaPage() {
                     />
                   </div>
 
+                  {status === 'error' && (
+                    <div className="mb-4 rounded-xl bg-rose-pale p-3 text-center text-[0.85rem] text-rose font-medium">
+                      <i className="fas fa-exclamation-circle mr-2" /> Erro ao enviar encomenda. Tente novamente ou peça pelo WhatsApp.
+                    </div>
+                  )}
+
                   <div className="flex gap-3 pt-2">
                     <button
                       type="button"
+                      disabled={status === 'loading'}
                       onClick={() => setStep(2)}
-                      className="flex-1 rounded-2xl border border-border py-3.5 font-medium text-muted transition-all hover:border-rose-light hover:text-rose"
+                      className="flex-1 rounded-2xl border border-border py-3.5 font-medium text-muted transition-all hover:border-rose-light hover:text-rose disabled:opacity-50"
                     >
                       ← Voltar
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 rounded-2xl bg-rose py-3.5 font-medium text-white shadow-[0_4px_20px_rgba(196,86,107,0.35)] transition-all hover:-translate-y-0.5 hover:bg-rose-deep"
+                      disabled={status === 'loading'}
+                      className={cn(
+                        'flex-1 rounded-2xl py-3.5 font-medium text-white shadow-[0_4px_20px_rgba(196,86,107,0.35)] transition-all hover:-translate-y-0.5',
+                        status === 'loading' ? 'bg-muted cursor-not-allowed' : 'bg-rose hover:bg-rose-deep'
+                      )}
                     >
-                      Enviar Encomenda 🎉
+                      {status === 'loading' ? (
+                        <><i className="fas fa-spinner animate-spin" /> Enviando...</>
+                      ) : (
+                        <>Enviar Encomenda 🎉</>
+                      )}
                     </button>
                   </div>
                 </form>

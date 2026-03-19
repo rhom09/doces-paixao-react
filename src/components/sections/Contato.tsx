@@ -2,6 +2,7 @@ import { type FormEvent, useState } from 'react'
 import { LabelTag, RevealWrapper } from '@/components/ui/index'
 import { usePhoneMask } from '@/hooks/usePhoneMask'
 import { cn } from '@/utils/cn'
+import { sendContactForm } from '@/services/emailService'
 
 const INFO_ITEMS = [
   {
@@ -43,15 +44,37 @@ const inputBase =
 
 export function Contato() {
   const phone = usePhoneMask()
-  const [status, setStatus] = useState<'idle' | 'success'>('idle')
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setStatus('success')
-    setTimeout(() => {
-      setStatus('idle')
-      ;(e.target as HTMLFormElement).reset()
-    }, 3200)
+    if (status === 'loading' || status === 'success') return
+
+    setStatus('loading')
+
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      name: formData.get('userName') as string,
+      phone: phone.value,
+      email: formData.get('userEmail') as string,
+      type: formData.get('orderType') as string,
+      message: formData.get('userMessage') as string,
+    }
+
+    try {
+      await sendContactForm(data)
+      setStatus('success')
+      setTimeout(() => {
+        setStatus('idle')
+        const form = document.querySelector('#contact-form') as HTMLFormElement
+        form?.reset()
+        phone.reset()
+      }, 3500)
+    } catch (error) {
+      console.error(error)
+      setStatus('error')
+      setTimeout(() => setStatus('idle'), 4000)
+    }
   }
 
   return (
@@ -110,11 +133,11 @@ export function Contato() {
             <h4 className="mb-1.5 font-display text-[1.4rem] text-ink">Faça sua Encomenda</h4>
             <p className="mb-7 text-[0.85rem] text-muted">Preencha o formulário e responderemos em até 2 horas 🧁</p>
 
-            <form onSubmit={handleSubmit} noValidate>
+            <form onSubmit={handleSubmit} noValidate id="contact-form">
               <div className="mb-4 grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.8rem] font-semibold tracking-[0.03em] text-ink-soft">Nome completo</label>
-                  <input type="text" placeholder="Seu nome" required className={inputBase} />
+                  <input type="text" name="userName" placeholder="Seu nome" required className={inputBase} />
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.8rem] font-semibold tracking-[0.03em] text-ink-soft">Telefone</label>
@@ -124,15 +147,15 @@ export function Contato() {
 
               <div className="mb-4 flex flex-col gap-1.5">
                 <label className="text-[0.8rem] font-semibold tracking-[0.03em] text-ink-soft">E-mail</label>
-                <input type="email" placeholder="seu@email.com" required className={inputBase} />
+                <input type="email" name="userEmail" placeholder="seu@email.com" required className={inputBase} />
               </div>
 
               <div className="mb-4 flex flex-col gap-1.5">
                 <label className="text-[0.8rem] font-semibold tracking-[0.03em] text-ink-soft">Tipo de encomenda</label>
-                <select required className={inputBase}>
+                <select name="orderType" required className={inputBase}>
                   <option value="">Selecione uma opção</option>
                   {['Bolo Personalizado','Doces para Festa','Cupcakes','Casamento','Corporativo','Outro'].map(o => (
-                    <option key={o}>{o}</option>
+                    <option key={o} value={o}>{o}</option>
                   ))}
                 </select>
               </div>
@@ -140,23 +163,35 @@ export function Contato() {
               <div className="mb-6 flex flex-col gap-1.5">
                 <label className="text-[0.8rem] font-semibold tracking-[0.03em] text-ink-soft">Mensagem</label>
                 <textarea
+                  name="userMessage"
                   placeholder="Conte sobre sua encomenda: data do evento, quantidade, tema..."
                   required
                   className={cn(inputBase, 'min-h-[120px] resize-y')}
                 />
               </div>
 
+              {status === 'error' && (
+                <div className="mb-4 rounded-xl bg-rose-pale p-3 text-center text-[0.85rem] text-rose font-medium">
+                  <i className="fas fa-exclamation-circle mr-2" /> Ocorreu um erro ao enviar. Tente novamente ou chame no WhatsApp.
+                </div>
+              )}
+
               <button
                 type="submit"
+                disabled={status === 'loading'}
                 className={cn(
                   'flex w-full items-center justify-center gap-2 rounded-full py-3.5 font-body text-[0.95rem] font-semibold text-white transition-all duration-300',
                   status === 'success'
                     ? 'cursor-default bg-[#2db87b]'
-                    : 'bg-rose shadow-[0_4px_20px_rgba(196,86,107,0.3)] hover:-translate-y-0.5 hover:bg-rose-deep hover:shadow-[0_8px_28px_rgba(196,86,107,0.4)]'
+                    : status === 'loading'
+                      ? 'bg-muted cursor-not-allowed'
+                      : 'bg-rose shadow-[0_4px_20px_rgba(196,86,107,0.3)] hover:-translate-y-0.5 hover:bg-rose-deep hover:shadow-[0_8px_28px_rgba(196,86,107,0.4)]'
                 )}
               >
                 {status === 'success' ? (
                   <><i className="fas fa-check" /> Mensagem enviada!</>
+                ) : status === 'loading' ? (
+                  <><i className="fas fa-spinner animate-spin" /> Enviando...</>
                 ) : (
                   <><i className="fas fa-paper-plane" /> Enviar Mensagem</>
                 )}
