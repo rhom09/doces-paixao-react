@@ -10,21 +10,22 @@ export const step1Schema = z.object({
 });
 
 // Step 2: Your Order
-const minDate = new Date();
-minDate.setDate(minDate.getDate() + 7);
-
 export const step2Schema = z.object({
   productType: z.enum(PRODUCT_TYPES, {
-    errorMap: (issue, ctx) => {
+    errorMap: (issue) => {
       if (issue.code === 'invalid_enum_value') return { message: 'Selecione um tipo de produto' };
-      return { message: ctx.defaultError };
+      return { message: 'Selecione um tipo de produto' };
     }
   }),
-  quantity: z.number({ invalid_type_error: 'Informe a quantidade' }).min(1, 'Quantidade mínima é 1'),
+  quantity: z.string().min(2, 'Mínimo de 2 caracteres'),
   eventDate: z.string().refine((val) => {
     const date = new Date(val);
-    return date >= minDate;
-  }, { message: 'A data deve ser de pelo menos 7 dias a partir de hoje' }),
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const limit = new Date(today);
+    limit.setDate(today.getDate() + 2);
+    return date >= limit;
+  }, { message: 'O prazo mínimo para encomendas é de 2 dias' }),
   theme: z.string().min(1, 'Informe o tema ou ocasião'),
 });
 

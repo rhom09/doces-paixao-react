@@ -25,7 +25,7 @@ const STEPS = [
 ]
 
 const FLAVORS = ['Chocolate Belga', 'Ninho com Morango', 'Doce de Leite', 'Red Velvet', 'Pistache', 'Limão Siciliano']
-const RESTRICTIONS = ['Sem Glúten', 'Vegano', 'Sem Lactose']
+const RESTRICTIONS = ['Sem restrição', 'Sem Glúten', 'Vegano', 'Sem Lactose']
 const STORAGE_KEY = 'doces_paixao_encomenda_data'
 
 export default function EncomendaPage() {
@@ -117,8 +117,28 @@ export default function EncomendaPage() {
   }
 
   const minDate = new Date()
-  minDate.setDate(minDate.getDate() + 7)
+  minDate.setDate(minDate.getDate() + 2) // Changed from 7 to 2
   const minDateStr = minDate.toISOString().split('T')[0]
+
+  const getQuantityPlaceholder = () => {
+    const type = formData.productType
+    if (type === 'Bolo') return 'Ex: 1kg, 2kg, 1,5kg'
+    if (type === 'Docinhos') return 'Ex: 1 cento, 2 centos, 50 unidades'
+    if (type === 'Cupcakes' || type === 'Torta' || type === 'Especial') return 'Ex: 2 unidades'
+    return 'Ex: 1kg, 1 cento...'
+  }
+
+  const handleRestrictionChange = (r: string) => {
+    const current = getValues('restrictions') || []
+    if (r === 'Sem restrição') {
+      setValue('restrictions', ['Sem restrição'], { shouldValidate: true })
+    } else {
+      const next = current.includes(r)
+        ? current.filter((x) => x !== r)
+        : [...current.filter((x) => x !== 'Sem restrição'), r]
+      setValue('restrictions', next, { shouldValidate: true })
+    }
+  }
 
   return (
     <>
@@ -221,8 +241,9 @@ export default function EncomendaPage() {
                     <div className="space-y-2">
                     <label className="text-[0.85rem] font-bold text-ink">Quantidade</label>
                       <input 
-                        type="number"
-                        {...register('quantity', { valueAsNumber: true })}
+                        type="text"
+                        {...register('quantity')}
+                        placeholder={getQuantityPlaceholder()}
                         className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.quantity && 'border-rose-light bg-rose-pale/30')}
                       />
                       {errors.quantity && <p className="text-[0.75rem] font-medium text-rose">{errors.quantity.message}</p>}
@@ -230,7 +251,7 @@ export default function EncomendaPage() {
                   </div>
                   <div className="grid gap-6 sm:grid-cols-2">
                     <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Data do Evento (Mín. 7 dias)</label>
+                      <label className="text-[0.85rem] font-bold text-ink">Data do Evento (Mín. 2 dias)</label>
                       <input 
                         type="date"
                         min={minDateStr}
@@ -273,7 +294,13 @@ export default function EncomendaPage() {
                     <div className="flex flex-wrap gap-3">
                       {RESTRICTIONS.map(r => (
                         <label key={r} className="flex cursor-pointer items-center gap-2 rounded-full border border-border bg-canvas px-4 py-2 transition-all hover:border-mint-soft has-[:checked]:border-mint-deep has-[:checked]:bg-mint-pale">
-                          <input type="checkbox" value={r} {...register('restrictions')} className="h-4 w-4 rounded accent-mint-deep" />
+                          <input 
+                            type="checkbox" 
+                            value={r} 
+                            checked={formData.restrictions?.includes(r)}
+                            onChange={() => handleRestrictionChange(r)}
+                            className="h-4 w-4 rounded accent-mint-deep" 
+                          />
                           <span className="text-[0.82rem] font-medium text-ink-soft">{r}</span>
                         </label>
                       ))}

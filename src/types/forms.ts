@@ -11,7 +11,7 @@ export interface OrderFormData {
   email: string;
   phone: string;
   productType: string;
-  quantity: number;
+  quantity: string; // Changed from number to string
   eventDate: string;
   theme: string;
   flavors: string[];
