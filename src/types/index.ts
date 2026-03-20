@@ -8,8 +8,8 @@ export interface Product {
   description: string
   price: string
   priceNote?: string
-  imageUrl: string
-  image?: any
+  imageUrl?: string
+  image?: { asset: { _ref: string } } | any
   imageAlt: string
   tag: ProductTag
 }
@@ -20,8 +20,8 @@ export interface Testimonial {
   text: string
   authorName: string
   authorRole: string
-  avatarUrl: string
-  avatar?: any
+  avatarUrl?: string
+  avatar?: { asset: { _ref: string } } | any
   rating: number // 1–5, suporta .5
 }
 

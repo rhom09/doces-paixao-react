@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/SkeletonCard'
 import { RevealWrapper } from '@/components/ui/index'
 import { cn } from '@/utils/cn'
 import { useState } from 'react'
+import { getProductImageUrl } from '@/utils/getImageUrl'
 import type { Product, SiteSettings } from '@/types'
 
 const tagConfig = {
@@ -13,9 +14,9 @@ const tagConfig = {
   premium:    { label: '🎀 Premium',      className: 'bg-peach/95 text-ink' },
 } as const
 
-function getGallery(imageUrl: string) {
-  if (!imageUrl) return []
-  const base = imageUrl.split('?')[0]
+function getGallery(mainUrl: string) {
+  if (!mainUrl) return []
+  const base = mainUrl.split('?')[0]
   return [
     `${base}?w=800&q=85`,
     `${base}?w=800&q=85&crop=entropy`,
@@ -32,8 +33,8 @@ export default function ProdutoPage() {
   if (loadingProduct) return <div className="pt-32 pb-20"><Skeleton className="h-[600px] container mx-auto" /></div>
   if (!product) return <Navigate to="/cardapio" />
 
-  const imageUrl = product.image?.asset?._ref ? `https://cdn.sanity.io/images/vjt8hf0f/production/${product.image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-png', '.png')}` : ''
-  const gallery = getGallery(imageUrl)
+  const mainImageUrl = getProductImageUrl(product)
+  const gallery = getGallery(mainImageUrl)
   const tag = product.tag ? tagConfig[product.tag] : null
 
   return (

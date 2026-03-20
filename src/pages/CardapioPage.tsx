@@ -5,6 +5,7 @@ import { useSanity } from '@/hooks/useSanity'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
 import { SkeletonCard } from '@/components/ui/SkeletonCard'
 import { cn } from '@/utils/cn'
+import { getProductImageUrl } from '@/utils/getImageUrl'
 import type { ProductTab, ProductTag, Product } from '@/types'
 
 const TABS: ProductTab[] = ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais']
@@ -105,7 +106,7 @@ export default function CardapioPage() {
                   <Link to={`/produto/${product.id}`}>
                     <div className="relative h-64 overflow-hidden">
                       <img
-                        src={product.image.asset._ref ? `https://cdn.sanity.io/images/vjt8hf0f/production/${product.image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-png', '.png')}` : ''}
+                        src={getProductImageUrl(product)}
                         alt={product.name}
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />

@@ -2,11 +2,10 @@ import { useState } from 'react'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
 import type { Product, ProductTab, ProductTag } from '@/types'
 import { cn } from '@/utils/cn'
-
 import { ALL_PRODUCTS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
-import { urlFor } from '@/lib/sanity'
 import { SkeletonCard } from '@/components/ui/SkeletonCard'
+import { getProductImageUrl } from '@/utils/getImageUrl'
 
 const TABS: ProductTab[] = ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais']
 
@@ -28,8 +27,8 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
       {/* Image */}
       <div className="relative h-60 overflow-hidden">
         <img
-          src={product.image ? urlFor(product.image).url() : product.imageUrl}
-          alt={product.imageAlt}
+          src={getProductImageUrl(product)}
+          alt={product.imageAlt || product.name}
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.07]"
         />
 
@@ -41,7 +40,10 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 
         <button
           aria-label="Curtir"
-          onClick={() => setLiked(!liked)}
+          onClick={(e) => {
+            e.preventDefault()
+            setLiked(!liked)
+          }}
           className={cn(
             'absolute right-3.5 top-3.5 flex h-9 w-9 items-center justify-center rounded-full text-[0.9rem] transition-all',
             'bg-white/90 backdrop-blur-sm',
