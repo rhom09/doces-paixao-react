@@ -2,7 +2,7 @@
 export type ProductTag = 'bestseller' | 'novo' | 'premium' | null
 
 export interface Product {
-  id: string
+  id: number
   name: string
   category: 'Bolos' | 'Docinhos' | 'Tortas' | 'Especiais'
   description: string
@@ -16,7 +16,7 @@ export interface Product {
 
 // ── Depoimento ───────────────────────────────────────────────
 export interface Testimonial {
-  id: string
+  id: number
   text: string
   authorName: string
   authorRole: string

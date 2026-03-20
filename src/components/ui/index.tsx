@@ -107,17 +107,18 @@ export function RevealWrapper({
   className,
   as: Tag = 'div',
 }: RevealWrapperProps) {
-  const ref = useScrollReveal()
+  const scrollRef = useScrollReveal()
+  const ref = scrollRef as any
+  const Component = Tag as any
 
   return (
-    // @ts-expect-error dynamic tag
-    <Tag
+    <Component
       ref={ref}
       className={cn(directionClass[direction], className)}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
     >
       {children}
-    </Tag>
+    </Component>
   )
 }
 

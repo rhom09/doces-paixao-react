@@ -51,8 +51,9 @@ export default function EncomendaPage() {
 
   // Persistence
   useEffect(() => {
-    const subscription = control._names.mount.size > 0 ? // only after mount
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData)) : null
+    if (control._names.mount.size > 0) {
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData))
+    }
     return () => {}
   }, [formData, control])
 
@@ -345,9 +346,9 @@ export default function EncomendaPage() {
                         <p className="text-ink-soft">
                           <span className="font-medium text-ink">Sabores:</span> {formData.flavors?.join(', ') || 'Nenhum'}
                         </p>
-                        {formData.restrictions?.length > 0 && (
+                        {(formData.restrictions?.length ?? 0) > 0 && (
                           <p className="text-ink-soft">
-                            <span className="font-medium text-ink">Restrições:</span> {formData.restrictions.join(', ')}
+                            <span className="font-medium text-ink">Restrições:</span> {formData.restrictions?.join(', ')}
                           </p>
                         )}
                       </div>
