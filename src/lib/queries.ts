@@ -36,3 +36,29 @@ export const SITE_SETTINGS_QUERY = `*[_type == "siteSettings"][0] {
   email,
   socialLinks
 }`
+
+export const ALL_DIFERENCIAIS_QUERY = `*[_type == "diferencial"] | order(order asc) {
+  "id": _id,
+  number,
+  icon,
+  title,
+  description
+}`
+
+export const ALL_GALLERY_ITEMS_QUERY = `*[_type == "galleryItem"] | order(order asc) {
+  "id": _id,
+  "imageUrl": image.asset->url,
+  caption,
+  alt,
+  span
+}`
+
+export const ALL_STATS_QUERY = `*[_type == "stat"] | order(order asc) {
+  "id": _id,
+  icon,
+  value,
+  counterTarget,
+  suffix,
+  label,
+  colorClass
+}`

@@ -1,6 +1,9 @@
 import { useCounter } from '@/hooks/useCounter'
 import { RevealWrapper } from '@/components/ui/index'
+import { Skeleton } from '@/components/ui/SkeletonCard'
 import { STATS } from '@/data/stats'
+import { useSanity } from '@/hooks/useSanity'
+import { ALL_STATS_QUERY } from '@/lib/queries'
 import type { Stat } from '@/types'
 import { cn } from '@/utils/cn'
 
@@ -41,10 +44,23 @@ function StatItem({ stat, index }: { stat: Stat; index: number }) {
 }
 
 export function Stats() {
+  const { data: sanData, loading } = useSanity<Stat[]>(ALL_STATS_QUERY)
+  const data = sanData && sanData.length > 0 ? sanData : STATS
+
   return (
     <div className="relative z-10 border-b border-border-soft bg-white">
       <div className="mx-auto grid max-w-[1180px] grid-cols-2 px-7 lg:grid-cols-4">
-        {STATS.map((stat, i) => <StatItem key={stat.id} stat={stat} index={i} />)}
+        {loading ? (
+          Array.from({ length: 4 }).map((_, i) => (
+             <div key={i} className="border-r border-border-soft px-7 py-9 flex flex-col items-center last:border-r-0">
+               <Skeleton className="mb-3.5 h-10 w-10 rounded-[10px]" />
+               <Skeleton className="mb-1.5 h-10 w-24" />
+               <Skeleton className="h-4 w-16" />
+             </div>
+          ))
+        ) : (
+          data.map((stat, i) => <StatItem key={stat.id} stat={stat} index={i} />)
+        )}
       </div>
     </div>
   )

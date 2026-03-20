@@ -1,4 +1,4 @@
-import { ALL_TESTIMONIALS_QUERY } from '@/lib/queries'
+import { ALL_TESTIMONIALS_QUERY, ALL_DIFERENCIAIS_QUERY, ALL_GALLERY_ITEMS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
 import { urlFor } from '@/lib/sanity'
 import { Skeleton } from '@/components/ui/SkeletonCard'
@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/Button'
 import { DIFERENCIAIS } from '@/data/diferenciais'
 import { GALLERY_ITEMS } from '@/data/stats'
 import { cn } from '@/utils/cn'
-import type { Testimonial } from '@/types'
+import type { Testimonial, Diferencial, GalleryItem } from '@/types'
 
 // ── Diferenciais ──────────────────────────────────────────────
 const iconColors = [
@@ -18,6 +18,9 @@ const iconColors = [
 ]
 
 export function Diferenciais() {
+  const { data: sanData, loading } = useSanity<Diferencial[]>(ALL_DIFERENCIAIS_QUERY)
+  const data = sanData && sanData.length > 0 ? sanData : DIFERENCIAIS
+
   return (
     <section className="relative overflow-hidden bg-ink py-[120px] text-white">
       {/* Blobs */}
@@ -41,7 +44,16 @@ export function Diferenciais() {
         </RevealWrapper>
 
         <div className="grid overflow-hidden rounded-[28px] border border-white/6 sm:grid-cols-2 lg:grid-cols-4">
-          {DIFERENCIAIS.map((d, i) => (
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="border border-white/6 bg-white/[0.04] p-11">
+                <Skeleton className="mb-5 h-14 w-14 rounded-[14px] bg-white/10" />
+                <Skeleton className="mb-3 h-6 w-3/4 bg-white/10" />
+                <Skeleton className="h-4 w-full bg-white/10" />
+                <Skeleton className="mt-2 h-4 w-5/6 bg-white/10" />
+              </div>
+            ))
+          ) : data.map((d, i) => (
             <RevealWrapper
               key={d.id}
               delay={i * 80}
@@ -65,6 +77,9 @@ export function Diferenciais() {
 
 // ── Galeria ───────────────────────────────────────────────────
 export function Galeria() {
+  const { data: sanData, loading } = useSanity<GalleryItem[]>(ALL_GALLERY_ITEMS_QUERY)
+  const data = sanData && sanData.length > 0 ? sanData : GALLERY_ITEMS
+
   return (
     <section className="bg-cream py-[120px]" id="galeria">
       <div className="container mx-auto max-w-[1180px] px-7">
@@ -79,7 +94,11 @@ export function Galeria() {
         </RevealWrapper>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:[grid-template-rows:200px_200px]">
-          {GALLERY_ITEMS.map((item, i) => (
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className={cn('rounded-[20px] min-h-[180px]', i === 0 && 'md:col-span-2 md:row-span-2')} />
+            ))
+          ) : data.map((item, i) => (
             <RevealWrapper
               key={item.id}
               delay={i * 80}
