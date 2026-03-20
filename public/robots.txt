@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://doces-paixao.vercel.app/sitemap.xml

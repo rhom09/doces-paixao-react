@@ -8,6 +8,7 @@ import { Produtos }     from '@/components/sections/Produtos'
 import { Diferenciais, Galeria, Depoimentos, CTABand } from '@/components/sections/Sections'
 import { Contato }      from '@/components/sections/Contato'
 import { cn } from '@/utils/cn'
+import { SEO } from '@/components/ui/SEO'
 
 function WhatsAppFAB() {
   return (
@@ -44,8 +45,31 @@ function ScrollTopButton() {
 }
 
 export default function App() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Bakery",
+    "name": "Doces Paixão",
+    "description": "Confeitaria artesanal em São Paulo",
+    "telephone": "(11) 99999-9999",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rua das Flores, 142",
+      "addressLocality": "São Paulo",
+      "addressRegion": "SP",
+      "addressCountry": "BR"
+    },
+    "openingHours": ["Mo-Fr 08:00-19:00", "Sa 09:00-16:00"],
+    "servesCuisine": "Confeitaria Artesanal",
+    "priceRange": "$$"
+  }
+
   return (
     <>
+      <SEO />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header />
 
       <main>
