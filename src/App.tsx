@@ -10,6 +10,7 @@ import { Contato }      from '@/components/sections/Contato'
 import { cn } from '@/utils/cn'
 import { SEO } from '@/components/ui/SEO'
 import { InstallBanner } from '@/components/ui/InstallBanner'
+import { BottomNav } from '@/components/layout/BottomNav'
 
 function WhatsAppFAB() {
   return (
@@ -18,7 +19,7 @@ function WhatsAppFAB() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Fale pelo WhatsApp"
-      className="animate-wpp-pulse fixed bottom-7 right-7 z-[800] flex h-14 w-14 items-center justify-center rounded-[16px] bg-[#25d366] text-[1.5rem] text-white transition-transform hover:scale-[1.08]"
+      className="animate-wpp-pulse fixed bottom-7 right-7 z-[800] hidden md:flex h-14 w-14 items-center justify-center rounded-[16px] bg-[#25d366] text-[1.5rem] text-white transition-transform hover:scale-[1.08]"
     >
       <i className="fab fa-whatsapp" />
     </a>
@@ -37,7 +38,8 @@ function ScrollTopButton() {
         'fixed bottom-7 right-24 z-[800] flex h-11 w-11 items-center justify-center rounded-[12px]',
         'bg-rose text-white text-[0.9rem] shadow-[0_4px_16px_rgba(196,86,107,0.3)]',
         'transition-all duration-300 hover:-translate-y-0.5 hover:bg-rose-deep',
-        show ? 'visible opacity-100 translate-y-0' : 'invisible opacity-0 translate-y-2.5'
+        show ? 'visible opacity-100 translate-y-0' : 'invisible opacity-0 translate-y-2.5',
+        'hidden md:flex'
       )}
     >
       <i className="fas fa-chevron-up" />
@@ -73,7 +75,7 @@ export default function App() {
       />
       <Header />
 
-      <main>
+      <main className="pb-20 md:pb-0">
         <Hero />
         <Stats />
         <Sobre />
@@ -90,6 +92,7 @@ export default function App() {
       <WhatsAppFAB />
       <ScrollTopButton />
       <InstallBanner />
+      <BottomNav />
     </>
   )
 }
