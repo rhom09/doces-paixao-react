@@ -2,8 +2,6 @@ import { useParams, Link, Navigate } from 'react-router-dom'
 import { PRODUCT_BY_ID_QUERY, SITE_SETTINGS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
 import { Skeleton } from '@/components/ui/SkeletonCard'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
 import { RevealWrapper } from '@/components/ui/index'
 import { cn } from '@/utils/cn'
 import { useState } from 'react'
@@ -15,8 +13,8 @@ const tagConfig = {
   premium:    { label: '🎀 Premium',      className: 'bg-peach/95 text-ink' },
 } as const
 
-// Generate extra gallery images from the same Unsplash photo
 function getGallery(imageUrl: string) {
+  if (!imageUrl) return []
   const base = imageUrl.split('?')[0]
   return [
     `${base}?w=800&q=85`,
@@ -29,145 +27,108 @@ export default function ProdutoPage() {
   const { id } = useParams<{ id: string }>()
   const { data: product, loading: loadingProduct } = useSanity<Product>(PRODUCT_BY_ID_QUERY, { id })
   const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
-
   const [activeImg, setActiveImg] = useState(0)
 
-  if (loadingProduct) {
-    return (
-      <>
-        <Header />
-        <main className="min-h-screen bg-canvas pt-28">
-          <div className="container mx-auto max-w-[1180px] px-7 py-16">
-            <Skeleton className="mb-10 h-6 w-48" />
-            <div className="grid gap-16 lg:grid-cols-2">
-              <Skeleton className="aspect-[4/3] w-full rounded-[28px]" />
-              <div className="space-y-6">
-                <Skeleton className="h-6 w-24 rounded-full" />
-                <Skeleton className="h-12 w-3/4 rounded-lg" />
-                <Skeleton className="h-24 w-full rounded-lg" />
-                <div className="space-y-3">
-                  {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-5 w-1/2" />)}
-                </div>
-                <Skeleton className="h-16 w-full rounded-2xl" />
-              </div>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </>
-    )
-  }
+  if (loadingProduct) return <div className="pt-32 pb-20"><Skeleton className="h-[600px] container mx-auto" /></div>
+  if (!product) return <Navigate to="/cardapio" />
 
-  if (!product) return <Navigate to="/404" replace />
-
-  const gallery = getGallery(product.imageUrl)
+  const imageUrl = product.image?.asset?._ref ? `https://cdn.sanity.io/images/vjt8hf0f/production/${product.image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-png', '.png')}` : ''
+  const gallery = getGallery(imageUrl)
   const tag = product.tag ? tagConfig[product.tag] : null
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-canvas pt-28">
-        <div className="container mx-auto max-w-[1180px] px-7 py-16">
+    <div className="min-h-screen bg-canvas pt-28 pb-20">
+      <div className="container mx-auto max-w-[1180px] px-7 py-16">
 
-          {/* Breadcrumb */}
-          <nav className="mb-10 flex items-center gap-2 text-[0.85rem] text-muted">
-            <Link to="/" className="hover:text-rose">Início</Link>
-            <span>/</span>
-            <Link to="/cardapio" className="hover:text-rose">Cardápio</Link>
-            <span>/</span>
-            <span className="text-ink">{product.name}</span>
-          </nav>
+        {/* Breadcrumb */}
+        <nav className="mb-10 flex items-center gap-2 text-[0.82rem] font-medium text-muted">
+          <Link to="/" className="hover:text-rose transition-colors">Home</Link>
+          <i className="fas fa-chevron-right text-[0.6rem] opacity-30" />
+          <Link to="/cardapio" className="hover:text-rose transition-colors">Cardápio</Link>
+          <i className="fas fa-chevron-right text-[0.6rem] opacity-30" />
+          <span className="text-rose-light">{product.name}</span>
+        </nav>
 
-          <div className="grid gap-16 lg:grid-cols-2">
-            {/* Gallery */}
-            <RevealWrapper direction="left">
-              <div className="overflow-hidden rounded-[28px] border border-border-soft shadow-md">
-                <img
-                  key={activeImg}
-                  src={gallery[activeImg]}
-                  alt={product.imageAlt}
-                  className="aspect-[4/3] w-full object-cover transition-opacity duration-300"
-                />
-              </div>
-              <div className="mt-4 flex gap-3">
-                {gallery.map((src, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setActiveImg(i)}
-                    className={cn(
-                      'overflow-hidden rounded-xl border-2 transition-all',
-                      i === activeImg ? 'border-rose shadow-[0_0_0_3px_rgba(196,86,107,0.2)]' : 'border-border-soft hover:border-rose-light'
-                    )}
-                  >
-                    <img src={src} alt="" className="h-16 w-20 object-cover" />
-                  </button>
-                ))}
-              </div>
+        <div className="grid gap-12 lg:grid-cols-2">
+          {/* Gallery */}
+          <div className="space-y-4">
+            <RevealWrapper className="aspect-square overflow-hidden rounded-[32px] border border-border-soft bg-white shadow-sm">
+              <img
+                src={gallery[activeImg]}
+                alt={product.name}
+                className="h-full w-full object-cover"
+              />
             </RevealWrapper>
+            <div className="grid grid-cols-3 gap-4">
+              {gallery.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setActiveImg(i)}
+                  className={cn(
+                    'aspect-square overflow-hidden rounded-2xl border-2 transition-all',
+                    activeImg === i ? 'border-rose shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
+                  )}
+                >
+                  <img src={img} alt={`${product.name} ${i}`} className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
 
-            {/* Details */}
+          {/* Info */}
+          <div className="flex flex-col">
             <RevealWrapper direction="right">
               {tag && (
-                <span className={cn('mb-4 inline-block rounded-full px-3 py-1 text-[0.75rem] font-semibold tracking-wide', tag.className)}>
+                <div className={cn('mb-6 inline-block rounded-full px-5 py-2 text-[0.75rem] font-bold shadow-sm', tag.className)}>
                   {tag.label}
-                </span>
+                </div>
               )}
-
-              <div className="mb-1 text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-mint-deep">
-                {product.category}
-              </div>
-              <h1 className="mb-4 font-display text-[clamp(1.8rem,3vw,2.6rem)] font-bold text-ink">
+              <h1 className="mb-4 font-display text-[clamp(2.5rem,5vw,3.5rem)] font-bold text-ink leading-tight">
                 {product.name}
               </h1>
-              <p className="mb-6 text-[1rem] leading-[1.85] text-muted">{product.description}</p>
-
-              {/* Details list */}
-              <ul className="mb-8 space-y-3">
-                {[
-                  { icon: 'fa-leaf',       text: 'Ingredientes 100% frescos e selecionados' },
-                  { icon: 'fa-clock',      text: 'Prazo de encomenda: mínimo 3 dias úteis' },
-                  { icon: 'fa-truck',      text: 'Entrega disponível na região' },
-                  { icon: 'fa-paintbrush',text: 'Personalização disponível sob consulta' },
-                ].map(({ icon, text }) => (
-                  <li key={text} className="flex items-start gap-3 text-[0.9rem] text-muted">
-                    <i className={cn('fas mt-0.5 text-rose', icon)} />
-                    {text}
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mb-8 flex items-baseline gap-2">
-                <span className="font-display text-[2.2rem] font-bold text-rose-deep">{product.price}</span>
-                {product.priceNote && (
-                  <span className="text-[0.85rem] text-muted">{product.priceNote}</span>
-                )}
+              <div className="mb-8 font-display text-[2.2rem] font-bold text-rose">
+                {product.price}
+                <span className="ml-1 text-[1.1rem] font-light text-muted">{product.priceNote}</span>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="mb-10 rounded-[24px] bg-white p-8 border border-border-soft shadow-sm">
+                <h3 className="mb-3 text-[0.95rem] font-bold uppercase tracking-widest text-ink">Descrição</h3>
+                <p className="text-[1.05rem] leading-[1.8] text-muted">{product.description}</p>
+              </div>
+
+              <div className="mb-10 grid gap-4 grid-cols-2">
+                <div className="rounded-2xl border border-border-soft bg-rose/5 p-5 text-center transition-colors hover:bg-rose/10">
+                  <div className="mb-1 text-[1.5rem]">🧁</div>
+                  <div className="text-[0.8rem] font-bold text-ink uppercase tracking-tighter">Artesanal</div>
+                </div>
+                <div className="rounded-2xl border border-border-soft bg-rose/5 p-5 text-center transition-colors hover:bg-rose/10">
+                  <div className="mb-1 text-[1.5rem]">🎀</div>
+                  <div className="text-[0.8rem] font-bold text-ink uppercase tracking-tighter">Premium</div>
+                </div>
+              </div>
+
+              <div className="mt-auto flex flex-col gap-4 sm:flex-row">
                 <Link
                   to="/encomenda"
-                  className="flex-1 rounded-2xl bg-rose py-3.5 text-center font-medium text-white shadow-[0_4px_20px_rgba(196,86,107,0.35)] transition-all hover:-translate-y-0.5 hover:bg-rose-deep"
+                  className="flex flex-[2] items-center justify-center gap-3 rounded-2xl bg-rose py-4.5 font-bold text-white shadow-xl transition-all hover:-translate-y-1 hover:bg-rose-deep"
                 >
-                  <i className="fas fa-inbox mr-2" /> Fazer Encomenda
+                  <i className="fas fa-shopping-cart" />
+                  Fazer Encomenda
                 </Link>
                 <a
-                  href={`https://wa.me/${settings?.phone || '5511999999999'}?text=Olá! Tenho interesse no produto: ${encodeURIComponent(product.name)}`}
+                  href={`https://wa.me/${settings?.phone.replace(/\D/g, '') || '5511999999999'}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20produto%20${product.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-2xl border border-[#25d366] px-5 py-3.5 font-medium text-[#25d366] transition-all hover:bg-[#25d366] hover:text-white"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-border-soft py-4.5 font-semibold text-ink transition-all hover:bg-canvas"
                 >
-                  <i className="fab fa-whatsapp text-[1.1rem]" /> WhatsApp
+                  <i className="fab fa-whatsapp text-lg text-[#25d366]" />
+                  Dúvidas
                 </a>
               </div>
-
-              <Link to="/cardapio" className="mt-6 flex items-center gap-1.5 text-[0.85rem] text-muted hover:text-rose">
-                <i className="fas fa-arrow-left text-[0.8rem]" /> Voltar ao cardápio
-              </Link>
             </RevealWrapper>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
+      </div>
+    </div>
   )
 }

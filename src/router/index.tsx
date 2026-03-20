@@ -1,7 +1,7 @@
-import { lazy, Suspense } from 'react'
-import { createBrowserRouter, RouterProvider, Outlet, useLocation } from 'react-router-dom'
-import { useEffect } from 'react'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { Suspense, lazy } from 'react'
 import App from '@/App'
+import { MainLayout } from '@/components/layout/MainLayout'
 
 // Lazy-loaded pages
 const CardapioPage   = lazy(() => import('@/pages/CardapioPage'))
@@ -22,18 +22,10 @@ function PageLoader() {
   )
 }
 
-// ScrollToTop as a layout component
-function ScrollToTop() {
-  const { pathname } = useLocation()
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' })
-  }, [pathname])
-  return <Outlet />
-}
 
 const router = createBrowserRouter([
   {
-    element: <ScrollToTop />,
+    element: <MainLayout />,
     children: [
       { index: true, path: '/',          element: <App /> },
       { path: '/cardapio',               element: <Suspense fallback={<PageLoader />}><CardapioPage /></Suspense> },

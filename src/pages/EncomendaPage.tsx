@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
 import { RevealWrapper, LabelTag, SectionHead } from '@/components/ui/index'
 import { cn } from '@/utils/cn'
 import { usePhoneMask } from '@/hooks/usePhoneMask'
@@ -97,23 +95,19 @@ export default function EncomendaPage() {
 
   if (status === 'success') {
     return (
-      <>
-        <Header />
-        <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-canvas px-7 pt-28 text-center">
-          <div className="text-6xl animate-bounce">🎉</div>
-          <h1 className="font-display text-[2.4rem] font-bold text-ink">Encomenda Recebida!</h1>
-          <p className="max-w-md text-muted leading-relaxed">
-            Obrigada por escolher a <strong>Doces Paixão</strong>! Em breve entraremos em contato pelo WhatsApp para confirmar os detalhes e combinar a entrega.
-          </p>
-          <Link
-            to="/"
-            className="mt-4 rounded-2xl bg-rose px-10 py-4 font-semibold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-rose-deep"
-          >
-            Voltar ao Início
-          </Link>
-        </main>
-        <Footer />
-      </>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-canvas px-7 pt-28 text-center">
+        <div className="text-6xl animate-bounce">🎉</div>
+        <h1 className="font-display text-[2.4rem] font-bold text-ink">Encomenda Recebida!</h1>
+        <p className="max-w-md text-muted leading-relaxed">
+          Obrigada por escolher a <strong>Doces Paixão</strong>! Em breve entraremos em contato pelo WhatsApp para confirmar os detalhes e combinar a entrega.
+        </p>
+        <Link
+          to="/"
+          className="mt-4 rounded-2xl bg-rose px-10 py-4 font-semibold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-rose-deep"
+        >
+          Voltar ao Início
+        </Link>
+      </main>
     )
   }
 
@@ -142,10 +136,8 @@ export default function EncomendaPage() {
   }
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-canvas pt-28">
-        <div className="container mx-auto max-w-[800px] px-7 py-16">
+    <div className="min-h-screen bg-canvas pt-28">
+      <div className="container mx-auto max-w-[800px] px-6 py-12">
           <RevealWrapper>
             <SectionHead
               tag={<LabelTag>📦 Nova Encomenda</LabelTag>}
@@ -413,8 +405,6 @@ export default function EncomendaPage() {
             Dúvidas? <a href="#" className="font-bold text-rose underline underline-offset-4">Fale conosco pelo WhatsApp</a>
           </p>
         </div>
-      </main>
-      <Footer />
-    </>
-  )
+      </div>
+    )
 }

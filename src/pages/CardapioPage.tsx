@@ -4,8 +4,6 @@ import { ALL_PRODUCTS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
 import { SkeletonCard } from '@/components/ui/SkeletonCard'
-import { Header } from '@/components/layout/Header'
-import { Footer } from '@/components/layout/Footer'
 import { cn } from '@/utils/cn'
 import type { ProductTab, ProductTag, Product } from '@/types'
 
@@ -29,155 +27,121 @@ function parsePrice(price: string) {
 }
 
 export default function CardapioPage() {
+  const { data: products, loading, error } = useSanity<Product[]>(ALL_PRODUCTS_QUERY)
   const [activeTab, setActiveTab] = useState<ProductTab>('Todos')
-  const [search, setSearch] = useState('')
-  const [priceIdx, setPriceIdx] = useState(0)
+  const [priceRange, setPriceRange] = useState(0)
 
-  const { data: products, loading } = useSanity<Product[]>(ALL_PRODUCTS_QUERY)
-
-  const range = PRICE_RANGES[priceIdx]
-
-  const filtered = (products || []).filter((p) => {
-    const matchTab = activeTab === 'Todos' || p.category === activeTab
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase())
-    const price = parsePrice(p.price)
-    const matchPrice = price >= range.min && price <= range.max
-    return matchTab && matchSearch && matchPrice
-  })
+  const filtered = (products || [])
+    .filter((p) => (activeTab === 'Todos' ? true : p.category === activeTab))
+    .filter((p) => {
+      const price = parsePrice(p.price)
+      return price >= PRICE_RANGES[priceRange].min && price <= PRICE_RANGES[priceRange].max
+    })
 
   return (
-    <>
-      <Header />
-      <main className="min-h-screen bg-canvas pt-28">
-        <div className="container mx-auto max-w-[1180px] px-7 py-16">
+    <div className="min-h-screen bg-canvas pt-28 pb-32">
+      <div className="container mx-auto max-w-[1180px] px-7 py-16">
 
-          <RevealWrapper>
-            <SectionHead
-              tag={<LabelTag>🍰 Cardápio Completo</LabelTag>}
-              title={<>Nossas <em className="italic text-rose">Delícias</em></>}
-              subtitle="Encontre o doce perfeito para cada ocasião"
-              center
-            />
+        <RevealWrapper>
+          <SectionHead
+            tag={<LabelTag variant="rose">🍰 Cardápio Completo</LabelTag>}
+            title={<>Nossas <em className="italic text-rose">Delícias</em></>}
+            subtitle="Explore nossa variedade de doces artesanais feitos com ingredientes premium."
+            center
+          />
+        </RevealWrapper>
+
+        {/* Filters */}
+        <div className="mb-14 flex flex-col items-center gap-8">
+          <RevealWrapper delay={80} className="flex flex-wrap justify-center gap-2">
+            {TABS.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={cn(
+                  'rounded-full border px-6 py-2.5 font-body text-[0.88rem] font-medium transition-all duration-300',
+                  activeTab === tab
+                    ? 'border-rose bg-rose text-white shadow-lg'
+                    : 'border-border bg-white text-muted hover:border-rose-light hover:text-rose'
+                )}
+              >
+                {tab}
+              </button>
+            ))}
           </RevealWrapper>
 
-          {/* Filters */}
-          <RevealWrapper delay={60} className="mb-10 flex flex-col items-center gap-5">
-            {/* Search */}
-            <div className="relative w-full max-w-sm">
-              <i className="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-[0.85rem] text-muted" />
-              <input
-                type="text"
-                placeholder="Buscar produto..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-2xl border border-border bg-white py-3 pl-10 pr-4 text-[0.9rem] text-ink placeholder:text-muted focus:border-rose focus:outline-none focus:ring-2 focus:ring-rose/20"
-              />
-            </div>
-
-            {/* Category tabs */}
-            <div className="flex flex-wrap justify-center gap-2">
-              {TABS.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={cn(
-                    'rounded-full border px-5 py-2 font-body text-[0.84rem] font-medium transition-all duration-300',
-                    activeTab === tab
-                      ? 'border-rose bg-rose text-white shadow-[0_4px_16px_rgba(196,86,107,0.28)]'
-                      : 'border-border bg-white text-muted hover:border-rose-light hover:text-rose'
-                  )}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            {/* Price filter */}
-            <div className="flex flex-wrap justify-center gap-2">
-              {PRICE_RANGES.map((r, i) => (
-                <button
-                  key={r.label}
-                  onClick={() => setPriceIdx(i)}
-                  className={cn(
-                    'rounded-full border px-4 py-1.5 text-[0.8rem] font-medium transition-all',
-                    priceIdx === i
-                      ? 'border-mint-deep bg-mint-deep text-white'
-                      : 'border-border bg-white text-muted hover:border-mint hover:text-mint-deep'
-                  )}
-                >
-                  {r.label}
-                </button>
-              ))}
-            </div>
+          <RevealWrapper delay={150} className="flex flex-wrap justify-center gap-3">
+            {PRICE_RANGES.map((range, i) => (
+              <button
+                key={range.label}
+                onClick={() => setPriceRange(i)}
+                className={cn(
+                  'rounded-xl border px-5 py-2 text-[0.82rem] transition-all',
+                  priceRange === i
+                    ? 'border-rose/30 bg-rose/5 text-rose font-semibold'
+                    : 'border-border bg-white text-muted hover:border-rose-pale'
+                )}
+              >
+                {range.label}
+              </button>
+            ))}
           </RevealWrapper>
-
-          {/* Results count */}
-          <p className="mb-8 text-center text-[0.85rem] text-muted">
-            {filtered.length} produto{filtered.length !== 1 ? 's' : ''} encontrado{filtered.length !== 1 ? 's' : ''}
-          </p>
-
-          {/* Grid */}
-          {loading ? (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {[...Array(6)].map((_, i) => (
-                <SkeletonCard key={i} />
-              ))}
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="flex flex-col items-center gap-4 py-24 text-center">
-              <span className="text-5xl">🔍</span>
-              <p className="text-[1rem] text-muted">Nenhum produto encontrado com esses filtros.</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((product, i) => {
-                const tag = product.tag ? tagConfig[product.tag] : null
-                return (
-                  <RevealWrapper
-                    key={product.id}
-                    delay={(i % 3) * 80}
-                    className="group overflow-hidden rounded-[28px] border border-border-soft bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:border-rose-light hover:shadow-lg"
-                  >
-                    <Link to={`/produto/${product.id}`} className="block">
-                      <div className="relative h-56 overflow-hidden">
-                        <img
-                          src={product.imageUrl}
-                          alt={product.imageAlt}
-                          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.07]"
-                        />
-                        {tag && (
-                          <span className={cn('absolute left-3.5 top-3.5 rounded-full px-3 py-1 text-[0.72rem] font-semibold tracking-[0.06em]', tag.className)}>
-                            {tag.label}
-                          </span>
-                        )}
-                      </div>
-                      <div className="p-5">
-                        <div className="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-mint-deep">
-                          {product.category}
-                        </div>
-                        <h3 className="mb-2 font-display text-[1.2rem] text-ink">{product.name}</h3>
-                        <p className="mb-4 text-[0.85rem] leading-[1.65] text-muted line-clamp-2">{product.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="font-display text-[1.4rem] font-bold text-rose-deep">
-                            {product.price}
-                            {product.priceNote && (
-                              <small className="font-body text-[0.75rem] font-normal text-muted"> {product.priceNote}</small>
-                            )}
-                          </div>
-                          <span className="rounded-xl bg-rose-pale px-3 py-1.5 text-[0.8rem] font-medium text-rose">
-                            Ver detalhes →
-                          </span>
-                        </div>
-                      </div>
-                    </Link>
-                  </RevealWrapper>
-                )
-              })}
-            </div>
-          )}
         </div>
-      </main>
-      <Footer />
-    </>
+
+        {/* Grid */}
+        {error ? (
+          <div className="py-20 text-center text-rose">Erro ao carregar cardápio.</div>
+        ) : (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {loading ? (
+              Array.from({ length: 9 }).map((_, i) => <SkeletonCard key={i} />)
+            ) : filtered.length > 0 ? (
+              filtered.map((product, i) => (
+                <RevealWrapper
+                  key={product.id}
+                  delay={(i % 3) * 80}
+                  className="group overflow-hidden rounded-[32px] border border-border-soft bg-white shadow-sm transition-all duration-500 hover:-translate-y-2 hover:border-rose-light hover:shadow-xl"
+                >
+                  <Link to={`/produto/${product.id}`}>
+                    <div className="relative h-64 overflow-hidden">
+                      <img
+                        src={product.image.asset._ref ? `https://cdn.sanity.io/images/vjt8hf0f/production/${product.image.asset._ref.replace('image-', '').replace('-jpg', '.jpg').replace('-png', '.png')}` : ''}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      {product.tag && (
+                        <div className={cn('absolute left-6 top-6 rounded-full px-4 py-1.5 text-[0.7rem] font-bold shadow-md', tagConfig[product.tag].className)}>
+                          {tagConfig[product.tag].label}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-8">
+                      <div className="mb-2 text-[0.75rem] font-bold uppercase tracking-widest text-rose-light">
+                        {product.category}
+                      </div>
+                      <h3 className="mb-3 font-display text-[1.4rem] font-semibold text-ink">{product.name}</h3>
+                      <p className="mb-6 line-clamp-2 text-[0.9rem] leading-relaxed text-muted">{product.description}</p>
+                      <div className="flex items-center justify-between border-t border-border-soft pt-6">
+                        <span className="font-display text-[1.3rem] font-bold text-ink">
+                          {product.price}<span className="text-[0.85rem] font-light text-muted">{product.priceNote}</span>
+                        </span>
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-rose/10 text-rose transition-colors group-hover:bg-rose group-hover:text-white">
+                          <i className="fas fa-arrow-right" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </RevealWrapper>
+              ))
+            ) : (
+              <div className="col-span-full py-20 text-center">
+                <div className="mb-4 text-5xl opacity-20">🍰</div>
+                <p className="text-muted">Nenhum doce encontrado com estes filtros.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
