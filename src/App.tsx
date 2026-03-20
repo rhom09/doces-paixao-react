@@ -9,6 +9,7 @@ import { Diferenciais, Galeria, Depoimentos, CTABand } from '@/components/sectio
 import { Contato }      from '@/components/sections/Contato'
 import { cn } from '@/utils/cn'
 import { SEO } from '@/components/ui/SEO'
+import { InstallBanner } from '@/components/ui/InstallBanner'
 
 function WhatsAppFAB() {
   return (
@@ -88,6 +89,7 @@ export default function App() {
 
       <WhatsAppFAB />
       <ScrollTopButton />
+      <InstallBanner />
     </>
   )
 }
