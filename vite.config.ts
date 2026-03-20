@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'icons/*.png'],
+      includeAssets: ['icons/*.png'],
       manifest: {
         name: 'Doces Paixão',
         short_name: 'Doces Paixão',
@@ -21,9 +21,14 @@ export default defineConfig({
         lang: 'pt-BR',
         icons: [
           {
-            src: '/icons/icon.svg',
-            sizes: '192x192 512x512',
-            type: 'image/svg+xml',
+            src: '/icons/DocesPaixao192.png',
+            sizes: '192x192',
+            type: 'image/png'
+          },
+          {
+            src: '/icons/DocesPaixao512.png',
+            sizes: '512x512',
+            type: 'image/png',
             purpose: 'any maskable'
           }
         ],
