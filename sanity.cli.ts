@@ -5,4 +5,5 @@ export default defineCliConfig({
     projectId: process.env.VITE_SANITY_PROJECT_ID,
     dataset: process.env.VITE_SANITY_DATASET ?? 'production',
   },
+  reactStrictMode: true,
 })
