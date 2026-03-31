@@ -2,7 +2,7 @@
 export type ProductTag = 'bestseller' | 'novo' | 'premium' | null
 
 export interface Product {
-  id: number
+  id: number | string
   name: string
   category: 'Bolos' | 'Docinhos' | 'Tortas' | 'Especiais'
   description: string
@@ -16,7 +16,7 @@ export interface Product {
 
 // ── Depoimento ───────────────────────────────────────────────
 export interface Testimonial {
-  id: number
+  id: number | string
   text: string
   authorName: string
   authorRole: string
@@ -27,7 +27,7 @@ export interface Testimonial {
 
 // ── Diferencial ──────────────────────────────────────────────
 export interface Diferencial {
-  id: number
+  id: number | string
   number: string
   icon: string        // classe Font Awesome, ex: 'fas fa-leaf'
   title: string
@@ -36,7 +36,7 @@ export interface Diferencial {
 
 // ── Stat ─────────────────────────────────────────────────────
 export interface Stat {
-  id: number
+  id: number | string
   icon: string
   value: string           // ex: '4.9' (estático) ou '' quando usa counter
   counterTarget?: number  // ex: 1800 (animado via JS)
@@ -47,7 +47,7 @@ export interface Stat {
 
 // ── Galeria item ─────────────────────────────────────────────
 export interface GalleryItem {
-  id: number
+  id: number | string
   imageUrl: string
   alt: string
   caption: string

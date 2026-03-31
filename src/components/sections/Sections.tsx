@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { DIFERENCIAIS } from '@/data/diferenciais'
 import { GALLERY_ITEMS } from '@/data/stats'
 import { cn } from '@/utils/cn'
-import { getAvatarUrl } from '@/utils/getImageUrl'
+import { getAvatarUrl, getGalleryImageUrl } from '@/utils/getImageUrl'
 import type { Testimonial, Diferencial, GalleryItem } from '@/types'
 
 // ── Diferenciais ──────────────────────────────────────────────
@@ -109,7 +109,7 @@ export function Galeria() {
               )}
             >
               <img
-                src={item.imageUrl}
+                src={getGalleryImageUrl(item)}
                 alt={item.alt}
                 className="h-full min-h-[180px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
               />

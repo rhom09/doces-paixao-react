@@ -1,5 +1,5 @@
 import { urlFor } from '@/lib/sanity'
-import type { Product, Testimonial } from '@/types'
+import type { Product, Testimonial, GalleryItem } from '@/types'
 
 /**
  * Gets the correct URL for a product image, 
@@ -41,4 +41,21 @@ export function getAvatarUrl(testimonial: Testimonial): string {
 
   // Fallback to a neutral user icon or brand icon
   return '/icons/DocesPaixao192.png'
+}
+
+/**
+ * Gets the correct URL for a gallery image,
+ * handling both Sanity objects and static URL strings.
+ */
+export function getGalleryImageUrl(item: GalleryItem): string {
+  // Check if item has a Sanity image object (from some older schemas or unified approach)
+  // or if the imageUrl itself was fetched as a direct asset url via GROQ.
+  // In our case, the query fetches image.asset->url as imageUrl.
+  
+  if (item.imageUrl) {
+    return item.imageUrl
+  }
+
+  // Fallback
+  return '/icons/DocesPaixao512.png'
 }
