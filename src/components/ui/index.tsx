@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import React, { type ReactNode } from 'react'
 import { cn } from '@/utils/cn'
 
 // ─────────────────────────────────────────────────────────────
@@ -91,7 +91,7 @@ interface RevealWrapperProps {
   direction?: RevealDirection
   delay?: number // ms (0, 80, 160, 240, 320, 400, 480)
   className?: string
-  as?: keyof JSX.IntrinsicElements
+  as?: keyof React.JSX.IntrinsicElements
 }
 
 const directionClass: Record<RevealDirection, string> = {
