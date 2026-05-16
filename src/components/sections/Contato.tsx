@@ -17,18 +17,6 @@ const INFO_ITEMS = [
     value: '(11) 99857-38330',
     colorClass: 'bg-mint-pale text-mint-deep',
   },
-  {
-    icon: 'fas fa-clock',
-    label: 'Horário de Atendimento',
-    value: 'Seg–Sex: 8h–19h  |  Sáb: 9h–16h',
-    colorClass: 'bg-[#fff8ec] text-peach-deep',
-  },
-  {
-    icon: 'fas fa-envelope',
-    label: 'E-mail',
-    value: 'contato@docespaixao.com.br',
-    colorClass: 'bg-rose-pale text-rose-deep',
-  },
 ]
 
 const SOCIALS = [
