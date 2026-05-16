@@ -6,9 +6,6 @@ const SOCIALS = [
   { label: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/55119985738330', hover: 'hover:bg-[#25d366] hover:text-white hover:border-[#25d366]' },
 ]
 
-const inputBase =
-  'w-full rounded-xl border border-border bg-canvas px-4 py-3 font-body text-[0.9rem] text-ink outline-none transition-all focus:border-rose focus:bg-white focus:shadow-[0_0_0_3px_rgba(196,86,107,0.1)]'
-
 export function Contato() {
   const addressUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Rua Candido Fontoura, 326, Jardim Boa Vista, São Paulo, SP')}`
 

@@ -10,7 +10,8 @@
       "Bash(vercel whoami *)",
       "Bash(vercel teams *)",
       "Bash(git push *)",
-      "Bash(vercel ls *)"
+      "Bash(vercel ls *)",
+      "Bash(npm run *)"
     ]
   },
   "skillOverrides": {
