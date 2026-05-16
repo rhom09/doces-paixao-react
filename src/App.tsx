@@ -13,7 +13,7 @@ export default function App() {
     "@type": "Bakery",
     "name": "Doces Paixão",
     "description": "Confeitaria artesanal em São Paulo",
-    "telephone": "(11) 99999-9999",
+    "telephone": "(11) 99857-38330",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Rua das Flores, 142",

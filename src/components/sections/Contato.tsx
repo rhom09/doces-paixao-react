@@ -14,7 +14,7 @@ const INFO_ITEMS = [
   {
     icon: 'fas fa-phone-alt',
     label: 'Telefone / WhatsApp',
-    value: '(11) 99999-9999',
+    value: '(11) 99857-38330',
     colorClass: 'bg-mint-pale text-mint-deep',
   },
   {
