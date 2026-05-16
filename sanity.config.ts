@@ -3,6 +3,7 @@ import { structureTool } from 'sanity/structure'
 import product from './src/schemas/sanity/product'
 import testimonial from './src/schemas/sanity/testimonial'
 import siteSettings from './src/schemas/sanity/siteSettings'
+import about from './src/schemas/sanity/about'
 import diferencial from './src/schemas/sanity/diferencial'
 import galleryItem from './src/schemas/sanity/galleryItem'
 import stat from './src/schemas/sanity/stat'
@@ -18,6 +19,6 @@ export default defineConfig({
   plugins: [structureTool()],
 
   schema: {
-    types: [product, testimonial, siteSettings, diferencial, galleryItem, stat],
+    types: [product, testimonial, siteSettings, about, diferencial, galleryItem, stat],
   },
 })

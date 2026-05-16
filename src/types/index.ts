@@ -55,6 +55,18 @@ export interface GalleryItem {
   span?: 'col' | 'row' | 'both'
 }
 
+// ── About ────────────────────────────────────────────────────
+export interface AboutData {
+  label: string
+  title: string
+  content: string[]
+  image?: any
+  imageUrl?: string
+  badgeTitle: string
+  badgeSubtitle: string
+  features: string[]
+}
+
 // ── Tabs ─────────────────────────────────────────────────────
 export type ProductTab = 'Todos' | 'Bolos' | 'Docinhos' | 'Tortas' | 'Especiais'
 

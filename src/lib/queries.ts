@@ -56,6 +56,17 @@ export const ALL_GALLERY_ITEMS_QUERY = `*[_type == "galleryItem"] | order(order 
   span
 }`
 
+export const ABOUT_QUERY = `*[_type == "about"][0] {
+  label,
+  title,
+  content,
+  image,
+  "imageUrl": image.asset->url,
+  badgeTitle,
+  badgeSubtitle,
+  features
+}`
+
 export const ALL_STATS_QUERY = `*[_type == "stat"] | order(order asc) {
   "id": _id,
   icon,
