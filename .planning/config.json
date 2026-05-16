@@ -1,0 +1,9 @@
+{
+  "workflow": "gsd-new-project",
+  "preferences": {
+    "research": true,
+    "commitStyle": "conventional",
+    "objective": "Launch Landing Page"
+  },
+  "initializedAt": "2026-05-16"
+}
