@@ -8,7 +8,7 @@ const INFO_ITEMS = [
   {
     icon: 'fas fa-map-marker-alt',
     label: 'Endereço',
-    value: 'Rua das Flores, 142 — Jardim Primavera\nSão Paulo, SP',
+    value: 'Rua Candido Fontoura, 326 — Jd. Boa Vista\nSão Paulo, SP',
     colorClass: 'bg-rose-pale text-rose',
   },
   {

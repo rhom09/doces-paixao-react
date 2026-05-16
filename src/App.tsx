@@ -16,7 +16,7 @@ export default function App() {
     "telephone": "(11) 99857-38330",
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Rua das Flores, 142",
+      "streetAddress": "Rua Candido Fontoura, 326",
       "addressLocality": "São Paulo",
       "addressRegion": "SP",
       "addressCountry": "BR"
