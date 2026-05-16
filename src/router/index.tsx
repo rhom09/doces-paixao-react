@@ -8,6 +8,7 @@ const CardapioPage   = lazy(() => import('@/pages/CardapioPage'))
 const ProdutoPage    = lazy(() => import('@/pages/ProdutoPage'))
 const EncomendaPage  = lazy(() => import('@/pages/EncomendaPage'))
 const SobrePage      = lazy(() => import('@/pages/SobrePage'))
+const AdminPage      = lazy(() => import('@/pages/admin/AdminPage'))
 const NotFoundPage   = lazy(() => import('@/pages/NotFoundPage'))
 
 // Loading fallback
@@ -24,6 +25,10 @@ function PageLoader() {
 
 
 const router = createBrowserRouter([
+  {
+    path: '/admin',
+    element: <Suspense fallback={<PageLoader />}><AdminPage /></Suspense>,
+  },
   {
     element: <MainLayout />,
     children: [
