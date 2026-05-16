@@ -5,6 +5,7 @@ export const ALL_PRODUCTS_QUERY = `*[_type == "product" && active == true] | ord
   description,
   price,
   tag,
+  image,
   "imageUrl": image.asset->url,
   "imageAlt": name
 }`
@@ -16,6 +17,7 @@ export const PRODUCT_BY_ID_QUERY = `*[_type == "product" && _id == $id][0] {
   description,
   price,
   tag,
+  image,
   "imageUrl": image.asset->url,
   "imageAlt": name
 }`
@@ -25,8 +27,8 @@ export const ALL_TESTIMONIALS_QUERY = `*[_type == "testimonial"] | order(rating 
   text,
   authorName,
   authorRole,
-  "avatarUrl": avatar.asset->url,
   avatar,
+  "avatarUrl": avatar.asset->url,
   rating
 }`
 
@@ -47,6 +49,7 @@ export const ALL_DIFERENCIAIS_QUERY = `*[_type == "diferencial"] | order(order a
 
 export const ALL_GALLERY_ITEMS_QUERY = `*[_type == "galleryItem"] | order(order asc) {
   "id": _id,
+  image,
   "imageUrl": image.asset->url,
   caption,
   alt,

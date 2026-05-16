@@ -48,6 +48,7 @@ export interface Stat {
 // ── Galeria item ─────────────────────────────────────────────
 export interface GalleryItem {
   id: number | string
+  image?: { asset: { _ref: string } } | any
   imageUrl: string
   alt: string
   caption: string

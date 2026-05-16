@@ -24,6 +24,9 @@ export function SEO({
       {/* Standard tags */}
       <title>{siteTitle}</title>
       <meta name="description" content={description} />
+      <meta name="author" content="Doces Paixão" />
+      <meta name="keywords" content="confeitaria, doces artesanais, bolos decorados, cupcakes, eventos, são paulo, casamentos, aniversários" />
+      <meta name="theme-color" content="#c4566b" />
       {canonical && <link rel="canonical" href={canonical} />}
 
       {/* Open Graph / Facebook */}

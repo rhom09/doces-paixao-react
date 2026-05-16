@@ -14,14 +14,14 @@
 - [x] Finalize Contact Form with EmailJS.
 - [x] Audit and fix responsiveness on small mobile devices.
 
-## Phase 3: Performance & Launch (Current)
+## Phase 3: Performance & Launch (Completed)
 *Goal: Ensure the site is production-ready.*
-- [ ] Implement Image optimization (WebP/AVIF, BlurHash).
-- [ ] SEO audit (Meta tags, Open Graph, Sitemap).
+- [x] Implement Image optimization (WebP/AVIF, BlurHash).
+- [x] SEO audit (Meta tags, Open Graph, Sitemap).
 - [x] Set up production deployment on Vercel.
-- [ ] Final UAT and launch.
+- [x] Final UAT and launch.
 
-## Phase 4: Post-Launch (Future)
+## Phase 4: Post-Launch (Current)
 - [ ] Instagram live feed integration.
 - [ ] Interactive Cake Builder.
 - [ ] Seasonal theme switcher in Sanity.

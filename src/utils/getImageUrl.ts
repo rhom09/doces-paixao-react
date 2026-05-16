@@ -48,10 +48,15 @@ export function getAvatarUrl(testimonial: Testimonial): string {
  * handling both Sanity objects and static URL strings.
  */
 export function getGalleryImageUrl(item: GalleryItem): string {
-  // Check if item has a Sanity image object (from some older schemas or unified approach)
-  // or if the imageUrl itself was fetched as a direct asset url via GROQ.
-  // In our case, the query fetches image.asset->url as imageUrl.
-  
+  if (item.image?.asset) {
+    try {
+      // Optimize gallery images to be max 800px wide for balance of quality/perf
+      return urlFor(item.image).width(800).auto('format').url()
+    } catch (e) {
+      console.warn('Error generating Sanity URL for gallery item:', item.id, e)
+    }
+  }
+
   if (item.imageUrl) {
     return item.imageUrl
   }
