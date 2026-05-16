@@ -32,11 +32,8 @@ const INFO_ITEMS = [
 ]
 
 const SOCIALS = [
-  { label: 'Instagram', icon: 'fab fa-instagram', hover: 'hover:bg-[#e1306c] hover:text-white hover:border-[#e1306c]' },
-  { label: 'Facebook',  icon: 'fab fa-facebook-f', hover: 'hover:bg-[#1877f2] hover:text-white hover:border-[#1877f2]' },
-  { label: 'WhatsApp',  icon: 'fab fa-whatsapp', hover: 'hover:bg-[#25d366] hover:text-white hover:border-[#25d366]' },
-  { label: 'TikTok',    icon: 'fab fa-tiktok', hover: 'hover:bg-ink hover:text-white hover:border-ink' },
-  { label: 'Pinterest', icon: 'fab fa-pinterest-p', hover: 'hover:bg-[#e60023] hover:text-white hover:border-[#e60023]' },
+  { label: 'Instagram', icon: 'fab fa-instagram', url: 'https://www.instagram.com/_doces.paixao/', hover: 'hover:bg-[#e1306c] hover:text-white hover:border-[#e1306c]' },
+  { label: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/55119985738330', hover: 'hover:bg-[#25d366] hover:text-white hover:border-[#25d366]' },
 ]
 
 const inputBase =
@@ -109,10 +106,12 @@ export function Contato() {
             </div>
 
             <div className="mt-7 flex gap-2.5">
-              {SOCIALS.map(({ label, icon, hover }) => (
+              {SOCIALS.map(({ label, icon, hover, url }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className={cn(
                     'flex h-[42px] w-[42px] items-center justify-center rounded-[11px] border border-border bg-white text-muted text-[0.95rem] transition-all hover:-translate-y-0.5',

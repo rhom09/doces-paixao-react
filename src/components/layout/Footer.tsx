@@ -22,9 +22,8 @@ export function Footer() {
   const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
 
   const socials = settings?.socialLinks || [
-    { platform: 'Instagram', icon: 'fab fa-instagram', url: '#' },
-    { platform: 'Facebook',  icon: 'fab fa-facebook-f', url: '#' },
-    { platform: 'WhatsApp',  icon: 'fab fa-whatsapp', url: '#' },
+    { platform: 'Instagram', icon: 'fab fa-instagram', url: 'https://www.instagram.com/_doces.paixao/' },
+    { platform: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/55119985738330' },
   ]
 
   function handleNewsletter(e: React.FormEvent) {
@@ -67,6 +66,8 @@ export function Footer() {
                 <a
                   key={social.platform}
                   href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.platform}
                   className="flex h-9.5 w-9.5 items-center justify-center rounded-[10px] bg-white/7 text-white/50 text-[0.9rem] transition-all hover:bg-rose hover:text-white"
                 >
