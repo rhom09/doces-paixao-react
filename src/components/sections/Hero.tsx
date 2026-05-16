@@ -11,8 +11,8 @@ export function Hero() {
       />
 
       {/* Overlays */}
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/88 via-ink/35 to-ink/25" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,rgba(196,86,107,0.2),transparent_70%)]" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/45 to-ink/35" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,rgba(196,86,107,0.25),transparent_70%)]" />
       <div className="absolute inset-0 bg-grain opacity-[0.03]" />
 
       {/* Content */}

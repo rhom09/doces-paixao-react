@@ -124,6 +124,7 @@ export function Footer() {
               />
               <button
                 type="submit"
+                aria-label="Assinar newsletter"
                 className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-rose text-white text-[0.9rem] transition-colors hover:bg-rose-deep"
               >
                 <i className="fas fa-arrow-right" />

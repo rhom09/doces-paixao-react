@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-16T12:00:00Z",
+  "title": "Design System: Doces Paixão",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Rose Passion", "canonical": "#c4566b", "tonalRamp": ["#3d1a21", "#622a35", "#873b49", "#ab4b5d", "#c4566b", "#d17a8c", "#df9ead", "#ecd2d9"] },
+      "secondary": { "role": "secondary", "displayName": "Mint Fresh", "canonical": "#4dbfb4", "tonalRamp": ["#14302d", "#235550", "#327b73", "#41a197", "#4dbfb4", "#71cdc3", "#94dbd3", "#b8e9e4"] },
+      "ink": { "role": "neutral", "displayName": "Deep Ink", "canonical": "#271620" },
+      "cream": { "role": "neutral", "displayName": "Silky Cream", "canonical": "#fdfaf7" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Cormorant Garamond", "purpose": "Títulos e frases de impacto." },
+      "body": { "displayName": "DM Sans", "purpose": "Leitura principal e interface." }
+    },
+    "motion": [
+      { "name": "Standard Reveal", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Entrada suave de elementos na tela." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão Primário",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação principal de conversão.",
+      "html": "<button class=\"ds-btn-primary\">ENCOMENDAR AGORA</button>",
+      "css": ".ds-btn-primary { background: #c4566b; color: #fff; padding: 12px 32px; font-family: 'DM Sans', sans-serif; font-weight: 500; border: none; border-radius: 9999px; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(196,86,107,0.28); } .ds-btn-primary:hover { background: #a8395a; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(196,86,107,0.36); }"
+    },
+    {
+      "name": "Card de Produto",
+      "kind": "card",
+      "description": "Exibição de doces no catálogo.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card-img\"></div><div class=\"ds-card-content\"><h3 class=\"ds-card-title\">Bolo de Morango</h3><p class=\"ds-card-price\">R$ 120,00</p></div></div>",
+      "css": ".ds-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 32px rgba(39,22,32,0.09); transition: transform 0.3s ease; } .ds-card:hover { transform: translateY(-4px); } .ds-card-img { height: 160px; background: #fdfaf7; } .ds-card-content { padding: 20px; } .ds-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: #271620; margin: 0; } .ds-card-price { font-family: 'DM Sans', sans-serif; color: #c4566b; font-weight: 600; margin-top: 8px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "A Vitrine Encantada",
+    "overview": "Este sistema visual foi desenhado para evocar a sofisticação e o encantamento de uma confeitaria de alto padrão.",
+    "keyCharacteristics": ["Suavidade Curvilínea", "Contraste Elegante", "Elevação Etérea"],
+    "rules": [
+      { "name": "The Rarity Rule", "body": "O Rose Passion é usado em ≤10% da tela. Sua raridade é o que confere o status de destaque.", "section": "colors" },
+      { "name": "The Floating Rule", "body": "Elementos interativos flutuam levemente, respondendo ao cursor com elevação adicional.", "section": "elevation" }
+    ],
+    "dos": ["Do usar o tom Ink para textos, nunca Preto puro.", "Do manter margens generosas."],
+    "donts": ["Don't usar cores saturadas ou neon.", "Don't usar bordas duras em botões."]
+  }
+}

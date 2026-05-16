@@ -5,6 +5,7 @@ import { Produtos }     from '@/components/sections/Produtos'
 import { Diferenciais, Galeria, Depoimentos, CTABand } from '@/components/sections/Sections'
 import { Contato }      from '@/components/sections/Contato'
 import { SEO } from '@/components/ui/SEO'
+import { SugarTrail } from '@/components/effects/SugarTrail'
 
 export default function App() {
   const jsonLd = {
@@ -27,6 +28,7 @@ export default function App() {
 
   return (
     <>
+      <SugarTrail />
       <SEO />
       <script
         type="application/ld+json"

@@ -75,6 +75,7 @@ export function BottomNav() {
               <button
                 key={item.id}
                 onClick={() => navigate(highlightHref)}
+                aria-label={highlightLabel}
                 className="relative -top-4 flex h-14 w-14 items-center justify-center rounded-full bg-rose text-white shadow-[0_4px_12px_rgba(196,86,107,0.4)] transition-transform active:scale-95"
               >
                 <div className="flex flex-col items-center">

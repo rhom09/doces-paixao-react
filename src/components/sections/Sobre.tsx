@@ -24,6 +24,7 @@ export function Sobre() {
           <img
             src="https://images.unsplash.com/photo-1556217477-d325251ece38?w=700&q=85"
             alt="Confeiteira artesanal Doces Paixão"
+            loading="lazy"
             className="relative z-10 aspect-[4/5] w-full rounded-[28px] object-cover shadow-lg"
           />
 
@@ -33,11 +34,11 @@ export function Sobre() {
           {/* Badge flutuante */}
           <div className="absolute -right-3 bottom-0 z-20 flex items-center gap-3.5 rounded-[20px] border border-border-soft bg-white px-5 py-4 shadow-md">
             <div className="flex h-12 w-12 items-center justify-center rounded-[12px] bg-gradient-to-br from-rose to-rose-light text-[1.1rem] text-white">
-              <i className="fas fa-heart" />
+              <i className="fas fa-certificate" />
             </div>
             <div>
-              <strong className="block font-display text-[1.6rem] leading-none text-ink">10+ Anos</strong>
-              <small className="text-[0.78rem] text-muted">de pura paixão</small>
+              <strong className="block font-display text-[1.3rem] leading-tight text-ink">Ingredientes Selecionados</strong>
+              <small className="text-[0.78rem] text-muted">Qualidade Premium</small>
             </div>
           </div>
         </RevealWrapper>

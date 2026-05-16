@@ -29,6 +29,7 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
         <img
           src={getProductImageUrl(product)}
           alt={product.imageAlt || product.name}
+          loading="lazy"
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.07]"
         />
 
@@ -108,6 +109,7 @@ export function Produtos() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
+              aria-label={`Filtrar por ${tab}`}
               className={cn(
                 'rounded-full border px-5 py-2 font-body text-[0.84rem] font-medium transition-all duration-300',
                 activeTab === tab

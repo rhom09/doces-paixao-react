@@ -111,9 +111,10 @@ export function Galeria() {
               <img
                 src={getGalleryImageUrl(item)}
                 alt={item.alt}
+                loading="lazy"
                 className="h-full min-h-[180px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
               />
-              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink/55 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
+              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink/75 to-transparent p-4 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100">
                 <span className="text-[0.82rem] font-medium text-white">{item.caption}</span>
               </div>
             </RevealWrapper>
