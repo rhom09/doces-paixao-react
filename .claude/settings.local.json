@@ -9,7 +9,8 @@
       "Bash(git remote *)",
       "Bash(vercel whoami *)",
       "Bash(vercel teams *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(vercel ls *)"
     ]
   },
   "skillOverrides": {
