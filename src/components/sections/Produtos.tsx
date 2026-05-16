@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import { LabelTag, SectionHead, RevealWrapper } from '@/components/ui/index'
-import type { Product, ProductTab, ProductTag } from '@/types'
+import type { Product, ProductTag } from '@/types'
 import { cn } from '@/utils/cn'
 import { ALL_PRODUCTS_QUERY } from '@/lib/queries'
 import { useSanity } from '@/hooks/useSanity'
 import { SkeletonCard } from '@/components/ui/SkeletonCard'
 import { getProductImageUrl } from '@/utils/getImageUrl'
-
-const TABS: ProductTab[] = ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais']
+import { getWhatsAppLink } from '@/utils/whatsapp'
 
 const tagConfig: Record<NonNullable<ProductTag>, { label: string; className: string }> = {
   bestseller: { label: '⭐ Mais Vendido', className: 'bg-rose/90 text-white' },
@@ -70,12 +69,15 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
               <small className="font-body text-[0.75rem] font-normal text-muted"> {product.priceNote}</small>
             )}
           </div>
-          <button
-            aria-label="Adicionar"
+          <a
+            href={getWhatsAppLink(product.name)}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Encomendar ${product.name} pelo WhatsApp`}
             className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-rose-pale text-rose text-[0.95rem] transition-all hover:bg-rose hover:text-white"
           >
             <i className="fas fa-shopping-bag" />
-          </button>
+          </a>
         </div>
       </div>
     </RevealWrapper>
@@ -84,7 +86,12 @@ function ProductCard({ product, index }: { product: Product; index: number }) {
 
 export function Produtos() {
   const { data: products, loading, error } = useSanity<Product[]>(ALL_PRODUCTS_QUERY)
-  const [activeTab, setActiveTab] = useState<ProductTab>('Todos')
+  const [activeTab, setActiveTab] = useState<string>('Todos')
+
+  // Derive categories dynamically from products
+  const dynamicTabs = products
+    ? ['Todos', ...Array.from(new Set(products.map(p => p.category)))]
+    : ['Todos', 'Bolos', 'Docinhos', 'Tortas', 'Especiais'] // Fallback/Loading state
 
   const filtered = activeTab === 'Todos'
     ? products || []
@@ -105,7 +112,7 @@ export function Produtos() {
 
         {/* Tabs */}
         <RevealWrapper delay={80} className="mb-12 flex flex-wrap justify-center gap-2">
-          {TABS.map((tab) => (
+          {dynamicTabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}

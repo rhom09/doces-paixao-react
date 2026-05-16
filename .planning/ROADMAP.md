@@ -1,24 +1,24 @@
 # Project Roadmap: Doces Paixão 🧁
 
-## Phase 1: Foundation & CMS Migration (Current)
+## Phase 1: Foundation & CMS Migration (Completed)
 *Goal: Move all hardcoded data to Sanity and stabilize the core UI.*
-- [ ] Set up Sanity schemas for Products, Gallery, and Stats.
-- [ ] Implement data fetching layer (GROQ + Client).
-- [ ] Refactor existing sections to use Sanity data.
-- [ ] Verify TypeScript types for all CMS content.
+- [x] Set up Sanity schemas for Products, Gallery, and Stats.
+- [x] Implement data fetching layer (GROQ + Client).
+- [x] Refactor existing sections to use Sanity data.
+- [x] Verify TypeScript types for all CMS content.
 
-## Phase 2: Conversion & Polish
+## Phase 2: Conversion & Polish (Completed)
 *Goal: Optimize for user interaction and conversion.*
-- [ ] Implement category filtering for the product section.
-- [ ] Integrate WhatsApp "Direct Order" links.
-- [ ] Finalize Contact Form with EmailJS.
-- [ ] Audit and fix responsiveness on small mobile devices.
+- [x] Implement category filtering for the product section.
+- [x] Integrate WhatsApp "Direct Order" links.
+- [x] Finalize Contact Form with EmailJS.
+- [x] Audit and fix responsiveness on small mobile devices.
 
-## Phase 3: Performance & Launch
+## Phase 3: Performance & Launch (Current)
 *Goal: Ensure the site is production-ready.*
 - [ ] Implement Image optimization (WebP/AVIF, BlurHash).
 - [ ] SEO audit (Meta tags, Open Graph, Sitemap).
-- [ ] Set up production deployment on Vercel.
+- [x] Set up production deployment on Vercel.
 - [ ] Final UAT and launch.
 
 ## Phase 4: Post-Launch (Future)
