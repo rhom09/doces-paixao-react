@@ -56,6 +56,9 @@ export default function EncomendaPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const phoneMask = usePhoneMask()
 
+  const { data: sanProductTypes } = useSanity<SanityProductType[]>(ALL_PRODUCT_TYPES_QUERY)
+  const { data: sanFlavors } = useSanity<SanityFlavor[]>(ALL_FLAVORS_QUERY)
+
   const {
     register,
     handleSubmit,
@@ -86,11 +89,11 @@ export default function EncomendaPage() {
         ...SABORES_DOCINHOS.map((name, i) => ({ id: `d-${i}`, name, category: 'docinhos' as const, color: getFlavorColor(name) }))
       ]
 
-  const activeFlavors = flavors.filter(f =>
+  const activeFlavors = flavors.filter((f: SanityFlavor) =>
     formData.productType === 'Docinhos' ? f.category === 'docinhos' : f.category === 'bolo'
   )
 
-  const quickQuantities = productTypes.find(p => p.name === formData.productType)?.quickQuantities || []
+  const quickQuantities = productTypes.find((p: SanityProductType) => p.name === formData.productType)?.quickQuantities || []
 
   // Persistence
   useEffect(() => {
@@ -294,7 +297,7 @@ export default function EncomendaPage() {
                     <div>
                       <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter mb-4 block">O que você deseja encomendar?</label>
                       <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 max-w-[500px]">
-                        {productTypes.map(type => (
+                        {productTypes.map((type: SanityProductType) => (
                           <button
                             key={type.id}
                             type="button"
@@ -323,7 +326,7 @@ export default function EncomendaPage() {
                         <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Quantidade</label>
                         {quickQuantities.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-3">
-                            {quickQuantities.map(qty => (
+                            {quickQuantities.map((qty: string) => (
                               <button
                                 key={qty}
                                 type="button"
@@ -369,7 +372,7 @@ export default function EncomendaPage() {
                     <div className="space-y-4">
                       <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Escolha os Sabores</label>
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        {activeFlavors.map(flavor => (
+                        {activeFlavors.map((flavor: SanityFlavor) => (
                           <label
                             key={flavor.id}
                             className={cn(
@@ -482,7 +485,7 @@ export default function EncomendaPage() {
                           <div>
                             <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Pedido Principal</p>
                             <div className="flex items-center gap-2">
-                              <span className="text-2xl">{productTypes.find(p => p.name === formData.productType)?.emoji || '🎂'}</span>
+                              <span className="text-2xl">{productTypes.find((p: SanityProductType) => p.name === formData.productType)?.emoji || '🎂'}</span>
                               <p className="text-ink font-bold text-lg">{formData.productType}</p>
                             </div>
                             <p className="text-ink-soft">Quantidade: <span className="font-semibold">{formData.quantity}</span></p>
@@ -562,7 +565,7 @@ export default function EncomendaPage() {
                 productType={formData.productType}
                 quantity={formData.quantity}
                 flavors={formData.flavors}
-                customColor={flavors.find(f => f.name === formData.flavors?.[0])?.color}
+                customColor={flavors.find((f: SanityFlavor) => f.name === formData.flavors?.[0])?.color}
               />
             </aside>
 
@@ -572,7 +575,7 @@ export default function EncomendaPage() {
                 productType={formData.productType}
                 quantity={formData.quantity}
                 flavors={formData.flavors}
-                customColor={flavors.find(f => f.name === formData.flavors?.[0])?.color}
+                customColor={flavors.find((f: SanityFlavor) => f.name === formData.flavors?.[0])?.color}
                 className="static top-0"
               />
             </div>
