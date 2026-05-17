@@ -117,7 +117,7 @@ export default function ProdutoPage() {
                   Fazer Encomenda
                 </Link>
                 <a
-                  href={`https://wa.me/${settings?.phone.replace(/\D/g, '') || '55119985738330'}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20produto%20${product.name}`}
+                  href={`https://wa.me/${settings?.phone.replace(/\D/g, '') || '5511985738330'}?text=Olá!%20Gostaria%20de%20saber%20mais%20sobre%20o%20produto%20${product.name}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex flex-1 items-center justify-center gap-2 rounded-2xl border-2 border-border-soft py-4.5 font-semibold text-ink transition-all hover:bg-canvas"

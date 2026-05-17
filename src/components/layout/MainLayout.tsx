@@ -11,7 +11,7 @@ import { cn } from '@/utils/cn'
 function WhatsAppFAB() {
   return (
     <a
-      href="https://wa.me/55119985738330?text=Olá%20Doces%20Paixão!%20Gostaria%20de%20fazer%20uma%20encomenda%20🧁"
+      href="https://wa.me/5511985738330?text=Olá%20Doces%20Paixão!%20Gostaria%20de%20fazer%20uma%20encomenda%20🧁"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Fale pelo WhatsApp"

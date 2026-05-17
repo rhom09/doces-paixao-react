@@ -1,5 +1,5 @@
 export function getWhatsAppLink(productName?: string) {
-  const phone = '55119985738330' // Número atualizado
+  const phone = '5511985738330' // Número atualizado
   const message = productName
     ? encodeURIComponent(`Olá! Gostaria de encomendar o ${productName}.`)
     : encodeURIComponent('Olá! Gostaria de solicitar um orçamento para uma encomenda 🧁')

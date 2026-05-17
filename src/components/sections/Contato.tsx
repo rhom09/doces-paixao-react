@@ -3,7 +3,7 @@ import { cn } from '@/utils/cn'
 
 const SOCIALS = [
   { label: 'Instagram', icon: 'fab fa-instagram', url: 'https://www.instagram.com/_doces.paixao/', hover: 'hover:bg-[#e1306c] hover:text-white hover:border-[#e1306c]' },
-  { label: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/55119985738330', hover: 'hover:bg-[#25d366] hover:text-white hover:border-[#25d366]' },
+  { label: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/5511985738330', hover: 'hover:bg-[#25d366] hover:text-white hover:border-[#25d366]' },
 ]
 
 export function Contato() {
