@@ -15,9 +15,9 @@
 - **Performance:** Optimized images (WebP/AVIF) and LCP < 2.5s.
 
 ### Conversion & Communication
-- **WhatsApp Integration:** "Order via WhatsApp" button on product cards with pre-filled messages.
-- **Contact Form:** React Hook Form + EmailJS for general inquiries.
-- **Delivery Zone Info:** Display clear information about delivery areas.
+- **WhatsApp Integration:** "Order via WhatsApp" button on product cards with pre-filled messages. Correct Phone: 5511985738330.
+- **Editorial Contact Section:** Focus on address and direct actions (Instagram/WhatsApp) instead of forms.
+- **Delivery Zone Info:** Display clear information about delivery areas (Jd. Boa Vista/SP).
 
 ## 2. Technical Requirements
 - **Framework:** React 19 + Vite + TypeScript.

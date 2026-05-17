@@ -1,6 +1,6 @@
 # External Integrations
 
-**Last Updated:** 2026-05-16  
+**Last Updated:** 2026-05-17  
 **Project:** Doces Paixão - Confeitaria Artesanal Website
 
 ---
@@ -24,10 +24,12 @@
 
 **Content Types Managed:**
 - Products (doces/confeitaria items)
-- Gallery images
 - Statistics/metrics
 - Testimonials (depoimentos)
 - Differentials (diferenciais)
+- About/Story (Sobre)
+- Site Settings (Address, Phone, Socials)
+- Sanity Studio integrated at /admin
 
 **Caching Strategy:**
 - CDN enabled (`useCdn: true`)

@@ -6,19 +6,23 @@
 - [x] Implement data fetching layer (GROQ + Client).
 - [x] Refactor existing sections to use Sanity data.
 - [x] Verify TypeScript types for all CMS content.
+- [x] Implement Sanity schemas for "Our History" (Sobre) and Site Settings.
+- [x] Integrate Sanity Studio directly into the application (/admin).
 
 ## Phase 2: Conversion & Polish (Completed)
 *Goal: Optimize for user interaction and conversion.*
 - [x] Implement category filtering for the product section.
-- [x] Integrate WhatsApp "Direct Order" links.
-- [x] Finalize Contact Form with EmailJS.
+- [x] Integrate WhatsApp "Direct Order" links with correct numbering (5511985738330).
+- [x] Redesign Contact Section (Editorial style without form, focus on direct links).
+- [x] Redesign Footer for better aesthetics and information density.
 - [x] Audit and fix responsiveness on small mobile devices.
 
 ## Phase 3: Performance & Launch (Completed)
 *Goal: Ensure the site is production-ready.*
 - [x] Implement Image optimization (WebP/AVIF, BlurHash).
-- [x] SEO audit (Meta tags, Open Graph, Sitemap).
-- [x] Set up production deployment on Vercel.
+- [x] SEO audit (Meta tags, Open Graph, Sitemap, JSON-LD).
+- [x] Set up production deployment on Vercel with PWA support.
+- [x] Remove redundant sections (Gallery) to focus on product conversions.
 - [x] Final UAT and launch.
 
 ## Phase 4: Post-Launch (Current)

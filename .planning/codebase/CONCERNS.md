@@ -1,6 +1,6 @@
 # Technical Concerns
 
-**Last Updated:** 2026-05-16  
+**Last Updated:** 2026-05-17  
 **Project:** Doces Paixão - Confeitaria Artesanal Website
 
 ---
@@ -216,12 +216,12 @@ Standardize on Tailwind CSS and migrate Styled Components.
 
 ### 3. Hardcoded Content
 **Severity:** LOW  
-**Impact:** Difficult to update content
+**Impact:** Easy to update content (Improved)
 
 **Current State:**
-- Some content in data/ files (good)
-- Some content hardcoded in components (bad)
-- Mix of static and CMS content
+- Most content moved to Sanity CMS (Products, Stats, Testimonials, About, Settings).
+- Some structural strings remain in components.
+- Gallery removed to simplify content management.
 
 **Recommendation:**
 Move all content to Sanity CMS for easier management.

@@ -1,6 +1,6 @@
 # Architecture
 
-**Last Updated:** 2026-05-16  
+**Last Updated:** 2026-05-17  
 **Project:** Doces Paixão - Confeitaria Artesanal Website
 
 ---
@@ -55,10 +55,10 @@ src/
 
 - `Hero.tsx` - Landing hero section
 - `Stats.tsx` - Statistics display
-- `Sobre.tsx` - About section
+- `Sobre.tsx` - About section (Integrated with Sanity)
 - `Produtos.tsx` - Products showcase
-- `Sections.tsx` - Diferenciais, Galeria, Depoimentos, CTABand
-- `Contato.tsx` - Contact form
+- `Sections.tsx` - Diferenciais, Depoimentos, CTABand (Gallery removed for conversion focus)
+- `Contato.tsx` - Editorial contact info (Instagram, WhatsApp, Address)
 
 **Pattern:** Each section is independent and self-contained
 

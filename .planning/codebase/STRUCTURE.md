@@ -1,6 +1,6 @@
 # Project Structure
 
-**Last Updated:** 2026-05-16  
+**Last Updated:** 2026-05-17  
 **Project:** Doces Paixão - Confeitaria Artesanal Website
 
 ---
@@ -32,15 +32,15 @@ src/
 ├── components/
 │   ├── layout/
 │   │   ├── BottomNav.tsx      # Mobile bottom navigation
-│   │   ├── Footer.tsx         # Site footer
-│   │   ├── Header.tsx         # Site header
-│   │   └── MainLayout.tsx     # Root layout wrapper
+│   │   ├── Footer.tsx         # Redesigned Site footer
+│   │   ├── Header.tsx         # Site header with SVG logo
+│   │   └── MainLayout.tsx     # Root layout wrapper with WhatsApp FAB
 │   ├── sections/
-│   │   ├── Contato.tsx        # Contact form section
+│   │   ├── Contato.tsx        # Editorial contact section (No form)
 │   │   ├── Hero.tsx           # Hero/landing section
-│   │   ├── Produtos.tsx       # Products showcase
-│   │   ├── Sections.tsx       # Diferenciais, Galeria, Depoimentos, CTABand
-│   │   ├── Sobre.tsx          # About section
+│   │   ├── Produtos.tsx       # Products showcase (Primary image source)
+│   │   ├── Sections.tsx       # Diferenciais, Depoimentos, CTABand (Gallery Removed)
+│   │   ├── Sobre.tsx          # About section (Sanity integrated)
 │   │   └── Stats.tsx          # Statistics section
 │   └── ui/
 │       ├── Button.tsx         # Button component

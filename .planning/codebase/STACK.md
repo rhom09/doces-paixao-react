@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Last Updated:** 2026-05-16  
+**Last Updated:** 2026-05-17  
 **Project:** Doces Paixão - Confeitaria Artesanal Website
 
 ---
