@@ -56,8 +56,21 @@ export default function EncomendaPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const phoneMask = usePhoneMask()
 
-  const { data: sanProductTypes } = useSanity<SanityProductType[]>(ALL_PRODUCT_TYPES_QUERY)
-  const { data: sanFlavors } = useSanity<SanityFlavor[]>(ALL_FLAVORS_QUERY)
+  const {
+    register,
+    handleSubmit,
+    trigger,
+    setValue,
+    getValues,
+    control,
+    formState: { errors },
+  } = useForm<EncomendaFormData>({
+    resolver: zodResolver(encomendaSchema),
+    mode: 'onBlur',
+    defaultValues: JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}'),
+  })
+
+  const formData = useWatch({ control })
 
   const productTypes = sanProductTypes && sanProductTypes.length > 0
     ? sanProductTypes
@@ -78,22 +91,6 @@ export default function EncomendaPage() {
   )
 
   const quickQuantities = productTypes.find(p => p.name === formData.productType)?.quickQuantities || []
-
-  const {
-    register,
-    handleSubmit,
-    trigger,
-    setValue,
-    getValues,
-    control,
-    formState: { errors },
-  } = useForm<EncomendaFormData>({
-    resolver: zodResolver(encomendaSchema),
-    mode: 'onBlur',
-    defaultValues: JSON.parse(sessionStorage.getItem(STORAGE_KEY) || '{}'),
-  })
-
-  const formData = useWatch({ control })
 
   // Persistence
   useEffect(() => {
