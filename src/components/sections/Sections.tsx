@@ -1,3 +1,4 @@
+import { ALL_TESTIMONIALS_QUERY, ALL_DIFERENCIAIS_QUERY, ALL_GALLERY_ITEMS_QUERY } from '@/lib/queries'
 import { getWhatsAppLink } from '@/utils/whatsapp'
 
 // ── Diferenciais ──────────────────────────────────────────────
