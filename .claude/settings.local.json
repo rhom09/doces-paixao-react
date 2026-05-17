@@ -12,7 +12,8 @@
       "Bash(git push *)",
       "Bash(vercel ls *)",
       "Bash(npm run *)",
-      "Skill(impeccable)"
+      "Skill(impeccable)",
+      "Bash(vercel inspect *)"
     ]
   },
   "skillOverrides": {

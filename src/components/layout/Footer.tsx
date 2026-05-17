@@ -1,8 +1,4 @@
-import { SITE_SETTINGS_QUERY } from '@/lib/queries'
-import { useSanity } from '@/hooks/useSanity'
 import { getWhatsAppLink } from '@/utils/whatsapp'
-import type { SiteSettings } from '@/types'
-import { cn } from '@/utils/cn'
 
 const QUICK_LINKS = [
   { label: 'Início',     href: '#inicio' },
@@ -14,7 +10,6 @@ const QUICK_LINKS = [
 ]
 
 export function Footer() {
-  const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
   const whatsappNumber = '11 98573-8330'
 
   return (
