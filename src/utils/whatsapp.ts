@@ -28,6 +28,8 @@ Data do Evento: ${new Date(data.eventDate).toLocaleDateString('pt-BR')}
 Sabores: ${data.flavors.join(', ')}
 ${data.restrictions?.length ? `Restrições: ${data.restrictions.join(', ')}` : ''}
 ${data.message ? `Mensagem: ${data.message}` : ''}
+
+${data.image ? '📸 *OBSERVAÇÃO:* Vou enviar a foto de referência a seguir.' : ''}
   `.trim()
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`

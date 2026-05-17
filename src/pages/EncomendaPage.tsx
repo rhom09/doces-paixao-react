@@ -176,6 +176,13 @@ export default function EncomendaPage() {
         <p className="max-w-md text-muted leading-relaxed">
           Obrigada por escolher a <strong>Doces Paixão</strong>! Em breve entraremos em contato pelo WhatsApp para confirmar os detalhes e combinar a entrega.
         </p>
+        {formData.image && (
+          <div className="max-w-md rounded-2xl bg-rose-pale/30 border border-rose-light p-5 animate-pulse">
+             <p className="text-rose font-bold text-sm">
+               📸 Não esqueça de anexar a foto de referência no WhatsApp que acabou de abrir!
+             </p>
+          </div>
+        )}
         <Link
           to="/"
           className="mt-4 rounded-2xl bg-rose px-10 py-4 font-semibold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-rose-deep"
@@ -512,6 +519,15 @@ export default function EncomendaPage() {
                       </span>
                     </label>
                     {errors.termsAccepted && <p className="text-[0.75rem] font-medium text-rose">{errors.termsAccepted.message}</p>}
+
+                    {formData.image && (
+                      <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 flex items-start gap-3">
+                        <span className="text-xl">📸</span>
+                        <p className="text-[0.85rem] text-amber-800 leading-tight">
+                          <strong>Foto selecionada:</strong> Lembre-se que você precisará anexar esta foto manualmente quando o WhatsApp abrir para que possamos vê-la.
+                        </p>
+                      </div>
+                    )}
 
                     {status === 'error' && (
                       <div className="rounded-xl bg-rose-pale p-4 text-center text-[0.85rem] text-rose font-medium">
