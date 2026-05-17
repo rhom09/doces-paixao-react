@@ -31,7 +31,6 @@ const STEPS = [
   { id: 4, label: 'Confirmação', schema: step4Schema },
 ]
 
-const PRODUCT_TYPES = ['Bolo', 'Docinhos']
 const SABORES_BOLO = [
   'Chocolate Belga',
   'Ninho com Morango',
@@ -57,8 +56,8 @@ export default function EncomendaPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const phoneMask = usePhoneMask()
 
-  const { data: sanProductTypes, loading: loadingProducts } = useSanity<SanityProductType[]>(ALL_PRODUCT_TYPES_QUERY)
-  const { data: sanFlavors, loading: loadingFlavors } = useSanity<SanityFlavor[]>(ALL_FLAVORS_QUERY)
+  const { data: sanProductTypes } = useSanity<SanityProductType[]>(ALL_PRODUCT_TYPES_QUERY)
+  const { data: sanFlavors } = useSanity<SanityFlavor[]>(ALL_FLAVORS_QUERY)
 
   const productTypes = sanProductTypes && sanProductTypes.length > 0
     ? sanProductTypes
@@ -486,7 +485,7 @@ export default function EncomendaPage() {
                           <div>
                             <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Pedido Principal</p>
                             <div className="flex items-center gap-2">
-                              <span className="text-2xl">{getProductEmoji(formData.productType)}</span>
+                              <span className="text-2xl">{productTypes.find(p => p.name === formData.productType)?.emoji || '🎂'}</span>
                               <p className="text-ink font-bold text-lg">{formData.productType}</p>
                             </div>
                             <p className="text-ink-soft">Quantidade: <span className="font-semibold">{formData.quantity}</span></p>

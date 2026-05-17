@@ -13,7 +13,6 @@ export interface OrderFormData {
   productType: string;
   quantity: string; // Changed from number to string
   eventDate: string;
-  theme: string;
   flavors: string[];
   restrictions?: string[];
   message?: string;

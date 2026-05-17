@@ -1,5 +1,5 @@
 import { cn } from '@/utils/cn'
-import { getCakeSize, getFlavorColor, getThemeDecoration, getProductEmoji } from '@/utils/cakeVisuals'
+import { getCakeSize, getFlavorColor, getProductEmoji } from '@/utils/cakeVisuals'
 
 interface CakePreviewProps {
   productType?: string
