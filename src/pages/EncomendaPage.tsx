@@ -4,15 +4,16 @@ import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RevealWrapper, LabelTag, SectionHead } from '@/components/ui/index'
 import { CakePreview } from '@/components/ui/CakePreview'
+import { getWhatsAppLink, getOrderWhatsAppLink } from '@/utils/whatsapp'
 import { cn } from '@/utils/cn'
 import { usePhoneMask } from '@/hooks/usePhoneMask'
+import { useSanity } from '@/hooks/useSanity'
+import { ALL_PRODUCT_TYPES_QUERY, ALL_FLAVORS_QUERY } from '@/lib/queries'
 import { sendOrderForm } from '@/services/emailService'
+import { SanityProductType, SanityFlavor } from '@/types'
 import {
-  FLAVOR_COLORS,
   RESTRICTION_ICONS,
-  QUICK_QUANTITIES,
   getFlavorColor,
-  getProductEmoji
 } from '@/utils/cakeVisuals'
 import {
   encomendaSchema,
@@ -30,15 +31,54 @@ const STEPS = [
   { id: 4, label: 'Confirmação', schema: step4Schema },
 ]
 
-const PRODUCT_TYPES = ['Bolo', 'Cupcakes', 'Docinhos', 'Torta', 'Especial']
-const FLAVORS = Object.keys(FLAVOR_COLORS)
+const PRODUCT_TYPES = ['Bolo', 'Docinhos']
+const SABORES_BOLO = [
+  'Chocolate Belga',
+  'Ninho com Morango',
+  'Doce de Leite',
+  'Red Velvet',
+  'Pistache',
+  'Limão Siciliano'
+]
+const SABORES_DOCINHOS = [
+  'Brigadeiro',
+  'Bicho de Pé',
+  'Beijinho',
+  'Ninho com Nutella',
+  'Coco Queimado',
+  'Paçoca'
+]
 const RESTRICTIONS = Object.keys(RESTRICTION_ICONS)
 const STORAGE_KEY = 'doces_paixao_encomenda_data'
 
 export default function EncomendaPage() {
   const [step, setStep] = useState(1)
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
   const phoneMask = usePhoneMask()
+
+  const { data: sanProductTypes, loading: loadingProducts } = useSanity<SanityProductType[]>(ALL_PRODUCT_TYPES_QUERY)
+  const { data: sanFlavors, loading: loadingFlavors } = useSanity<SanityFlavor[]>(ALL_FLAVORS_QUERY)
+
+  const productTypes = sanProductTypes && sanProductTypes.length > 0
+    ? sanProductTypes
+    : [
+        { id: '1', name: 'Bolo', emoji: '🎂', quickQuantities: ['1kg', '1,5kg', '2kg', '3kg'] },
+        { id: '2', name: 'Docinhos', emoji: '🍫', quickQuantities: ['50 un', '1 cento', '2 centos'] }
+      ]
+
+  const flavors = sanFlavors && sanFlavors.length > 0
+    ? sanFlavors
+    : [
+        ...SABORES_BOLO.map((name, i) => ({ id: `b-${i}`, name, category: 'bolo' as const, color: getFlavorColor(name) })),
+        ...SABORES_DOCINHOS.map((name, i) => ({ id: `d-${i}`, name, category: 'docinhos' as const, color: getFlavorColor(name) }))
+      ]
+
+  const activeFlavors = flavors.filter(f =>
+    formData.productType === 'Docinhos' ? f.category === 'docinhos' : f.category === 'bolo'
+  )
+
+  const quickQuantities = productTypes.find(p => p.name === formData.productType)?.quickQuantities || []
 
   const {
     register,
@@ -80,7 +120,7 @@ export default function EncomendaPage() {
 
   const nextStep = async () => {
     const currentStepFields = STEPS[step - 1].id === 1 ? ['name', 'email', 'phone'] :
-                              STEPS[step - 1].id === 2 ? ['productType', 'quantity', 'eventDate', 'theme'] :
+                              STEPS[step - 1].id === 2 ? ['productType', 'quantity', 'eventDate'] :
                               STEPS[step - 1].id === 3 ? ['flavors', 'restrictions', 'message'] :
                               ['termsAccepted']
 
@@ -90,10 +130,37 @@ export default function EncomendaPage() {
 
   const prevStep = () => setStep((s) => Math.max(s - 1, 1))
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Imagem muito grande. Máximo 5MB.')
+      return
+    }
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      alert('Apenas JPG, PNG ou WEBP são aceitos.')
+      return
+    }
+
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string)
+      setValue('image', reader.result as string) // Save base64 to form
+    }
+    reader.readAsDataURL(file)
+  }
+
   const onSubmit = async (data: EncomendaFormData) => {
     setStatus('loading')
     try {
       await sendOrderForm(data)
+
+      // Open WhatsApp after email is successfully sent
+      const whatsappLink = getOrderWhatsAppLink(data)
+      window.open(whatsappLink, '_blank')
+
       setStatus('success')
       sessionStorage.removeItem(STORAGE_KEY)
     } catch (error) {
@@ -163,7 +230,7 @@ export default function EncomendaPage() {
                 <div key={s.id} className="flex flex-col items-center gap-2 group">
                   <div
                     className={cn(
-                      'flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold transition-all duration-500 bg-white border-2',
+                      'flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold transition-all duration-500 border-2',
                       step === s.id ? 'border-rose bg-rose text-white shadow-[0_0_15px_rgba(196,86,107,0.4)]' :
                       step > s.id ? 'border-mint-deep bg-mint-deep text-white' : 'border-border text-muted'
                     )}
@@ -230,22 +297,25 @@ export default function EncomendaPage() {
                   <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div>
                       <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter mb-4 block">O que você deseja encomendar?</label>
-                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
-                        {PRODUCT_TYPES.map(type => (
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 max-w-[500px]">
+                        {productTypes.map(type => (
                           <button
-                            key={type}
+                            key={type.id}
                             type="button"
-                            onClick={() => setValue('productType', type as any, { shouldValidate: true })}
+                            onClick={() => {
+                              setValue('productType', type.name as any, { shouldValidate: true })
+                              setValue('flavors', [], { shouldValidate: false })
+                            }}
                             className={cn(
                               'flex flex-col items-center gap-3 rounded-3xl border-2 p-5 transition-all duration-300',
                               'hover:scale-105 hover:shadow-md',
-                              formData.productType === type
+                              formData.productType === type.name
                                 ? 'border-rose bg-rose-pale/30 shadow-[0_0_15px_rgba(196,86,107,0.2)]'
                                 : 'border-border bg-canvas hover:border-rose-light'
                             )}
                           >
-                            <div className="text-4xl filter drop-shadow-sm">{getProductEmoji(type)}</div>
-                            <span className="font-display text-lg font-semibold text-ink">{type}</span>
+                            <div className="text-4xl filter drop-shadow-sm">{type.emoji}</div>
+                            <span className="font-display text-lg font-semibold text-ink">{type.name}</span>
                           </button>
                         ))}
                       </div>
@@ -255,9 +325,9 @@ export default function EncomendaPage() {
                     <div className="grid gap-8 sm:grid-cols-2">
                       <div className="space-y-3">
                         <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Quantidade</label>
-                        {formData.productType && QUICK_QUANTITIES[formData.productType] && (
+                        {quickQuantities.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-3">
-                            {QUICK_QUANTITIES[formData.productType].map(qty => (
+                            {quickQuantities.map(qty => (
                               <button
                                 key={qty}
                                 type="button"
@@ -294,33 +364,6 @@ export default function EncomendaPage() {
                         {errors.eventDate && <p className="text-[0.75rem] font-medium text-rose">{errors.eventDate.message}</p>}
                       </div>
                     </div>
-
-                    <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Tema / Ocasião</label>
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {['Aniversário', 'Casamento', 'Batizado', 'Formatura', 'Presente'].map(t => (
-                          <button
-                            key={t}
-                            type="button"
-                            onClick={() => setValue('theme', t, { shouldValidate: true })}
-                            className={cn(
-                              'rounded-full border px-3 py-1.5 text-[0.75rem] font-bold transition-all',
-                              formData.theme === t
-                                ? 'border-rose bg-rose text-white'
-                                : 'border-border bg-white text-muted hover:border-rose-light hover:text-rose'
-                            )}
-                          >
-                            {t}
-                          </button>
-                        ))}
-                      </div>
-                      <input
-                        {...register('theme')}
-                        placeholder="Ex: Aniversário 1 ano, Casamento..."
-                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.theme && 'border-rose-light bg-rose-pale/30')}
-                      />
-                      {errors.theme && <p className="text-[0.75rem] font-medium text-rose">{errors.theme.message}</p>}
-                    </div>
                   </div>
                 )}
 
@@ -330,23 +373,23 @@ export default function EncomendaPage() {
                     <div className="space-y-4">
                       <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Escolha os Sabores</label>
                       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                        {FLAVORS.map(flavor => (
+                        {activeFlavors.map(flavor => (
                           <label
-                            key={flavor}
+                            key={flavor.id}
                             className={cn(
                               'flex flex-col items-center gap-3 rounded-2xl border-2 p-4 cursor-pointer transition-all duration-300',
                               'hover:scale-105',
-                              formData.flavors?.includes(flavor)
+                              formData.flavors?.includes(flavor.name)
                                 ? 'border-rose bg-rose-pale/30 shadow-md'
                                 : 'border-border bg-canvas hover:border-rose-light'
                             )}
                           >
                             <div
                               className="h-10 w-10 rounded-full shadow-inner border border-black/5"
-                              style={{ backgroundColor: getFlavorColor(flavor) }}
+                              style={{ backgroundColor: flavor.color }}
                             />
-                            <span className="text-[0.82rem] font-bold text-ink text-center leading-tight">{flavor}</span>
-                            <input type="checkbox" value={flavor} {...register('flavors')} className="hidden" />
+                            <span className="text-[0.82rem] font-bold text-ink text-center leading-tight">{flavor.name}</span>
+                            <input type="checkbox" value={flavor.name} {...register('flavors')} className="hidden" />
                           </label>
                         ))}
                       </div>
@@ -393,13 +436,29 @@ export default function EncomendaPage() {
 
                     <div className="space-y-2">
                       <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Imagem de Referência (Opcional)</label>
-                      <div className="rounded-2xl border-2 border-dashed border-border p-6 text-center transition-colors hover:bg-canvas">
-                        <input type="file" className="hidden" id="file-upload" />
-                        <label htmlFor="file-upload" className="cursor-pointer">
-                          <i className="fas fa-cloud-upload-alt text-2xl text-rose mb-2 block" />
-                          <span className="text-sm font-medium text-muted block">Clique para enviar uma foto de inspiração</span>
-                          <small className="text-[0.7rem] text-muted/60 uppercase font-bold mt-1 block">JPG, PNG até 5MB</small>
-                        </label>
+                      <div className="rounded-2xl border-2 border-dashed border-border p-6 text-center transition-colors hover:bg-canvas relative overflow-hidden">
+                        <input type="file" className="hidden" id="file-upload" accept="image/*" onChange={handleImageChange} />
+                        {!imagePreview ? (
+                          <label htmlFor="file-upload" className="cursor-pointer">
+                            <i className="fas fa-cloud-upload-alt text-2xl text-rose mb-2 block" />
+                            <span className="text-sm font-medium text-muted block">Clique para enviar uma foto de inspiração</span>
+                            <small className="text-[0.7rem] text-muted/60 uppercase font-bold mt-1 block">JPG, PNG até 5MB</small>
+                          </label>
+                        ) : (
+                          <div className="space-y-4">
+                            <img src={imagePreview} alt="Referência" className="mx-auto max-h-40 rounded-xl shadow-md" />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setImagePreview(null)
+                                setValue('image', undefined)
+                              }}
+                              className="text-xs font-bold text-rose uppercase tracking-widest hover:underline"
+                            >
+                              Remover Imagem
+                            </button>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -420,8 +479,7 @@ export default function EncomendaPage() {
                           </div>
                           <div>
                             <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Data e Ocasião</p>
-                            <p className="text-ink font-semibold">{new Date(formData.eventDate || '').toLocaleDateString('pt-BR')}</p>
-                            <p className="text-rose font-medium italic">{formData.theme}</p>
+                            <p className="text-ink font-semibold">{formData.eventDate ? new Date(formData.eventDate).toLocaleDateString('pt-BR') : '—'}</p>
                           </div>
                         </div>
                         <div className="space-y-4">
@@ -508,7 +566,7 @@ export default function EncomendaPage() {
                 productType={formData.productType}
                 quantity={formData.quantity}
                 flavors={formData.flavors}
-                theme={formData.theme}
+                customColor={flavors.find(f => f.name === formData.flavors?.[0])?.color}
               />
             </aside>
 
@@ -518,14 +576,14 @@ export default function EncomendaPage() {
                 productType={formData.productType}
                 quantity={formData.quantity}
                 flavors={formData.flavors}
-                theme={formData.theme}
+                customColor={flavors.find(f => f.name === formData.flavors?.[0])?.color}
                 className="static top-0"
               />
             </div>
           </div>
 
           <p className="mt-12 text-center text-[0.85rem] text-muted">
-            Deseja um projeto exclusivo? <a href="#" className="font-bold text-rose hover:underline underline-offset-4">Fale diretamente com nossa Cake Designer</a>
+            Deseja um projeto exclusivo? <a href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" className="font-bold text-rose hover:underline underline-offset-4">Fale diretamente com nossa Cake Designer</a>
           </p>
         </div>
       </div>

@@ -17,5 +17,6 @@ export interface OrderFormData {
   flavors: string[];
   restrictions?: string[];
   message?: string;
+  image?: string; // base64 image
   termsAccepted: boolean;
 }

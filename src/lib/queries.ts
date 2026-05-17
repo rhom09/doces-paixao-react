@@ -76,3 +76,17 @@ export const ALL_STATS_QUERY = `*[_type == "stat"] | order(order asc) {
   label,
   colorClass
 }`
+
+export const ALL_PRODUCT_TYPES_QUERY = `*[_type == "productType" && active == true] | order(order asc) {
+  "id": _id,
+  name,
+  emoji,
+  quickQuantities
+}`
+
+export const ALL_FLAVORS_QUERY = `*[_type == "flavor" && active == true] | order(order asc) {
+  "id": _id,
+  name,
+  color,
+  category
+}`

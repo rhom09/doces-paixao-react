@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const PRODUCT_TYPES = ['Bolo', 'Cupcakes', 'Docinhos', 'Torta', 'Especial'] as const;
+const PRODUCT_TYPES = ['Bolo', 'Docinhos'] as const;
 
 // Step 1: Your Data
 export const step1Schema = z.object({
@@ -24,7 +24,6 @@ export const step2Schema = z.object({
     limit.setDate(today.getDate() + 2);
     return date >= limit;
   }, { message: 'O prazo mínimo para encomendas é de 2 dias' }),
-  theme: z.string().min(1, 'Informe o tema ou ocasião'),
 });
 
 // Step 3: Customization

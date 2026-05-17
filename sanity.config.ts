@@ -7,6 +7,8 @@ import about from './src/schemas/sanity/about'
 import diferencial from './src/schemas/sanity/diferencial'
 import galleryItem from './src/schemas/sanity/galleryItem'
 import stat from './src/schemas/sanity/stat'
+import productType from './src/schemas/sanity/productType'
+import flavor from './src/schemas/sanity/flavor'
 
 export default defineConfig({
   name: 'default',
@@ -19,6 +21,6 @@ export default defineConfig({
   plugins: [structureTool()],
 
   schema: {
-    types: [product, testimonial, siteSettings, about, diferencial, galleryItem, stat],
+    types: [product, testimonial, siteSettings, about, diferencial, galleryItem, stat, productType, flavor],
   },
 })

@@ -5,14 +5,13 @@ interface CakePreviewProps {
   productType?: string
   quantity?: string
   flavors?: string[]
-  theme?: string
+  customColor?: string
   className?: string
 }
 
-export function CakePreview({ productType, quantity, flavors, theme, className }: CakePreviewProps) {
+export function CakePreview({ productType, quantity, flavors, customColor, className }: CakePreviewProps) {
   const size = getCakeSize(quantity || '')
-  const color = getFlavorColor(flavors?.[0])
-  const decoration = getThemeDecoration(theme)
+  const color = customColor || getFlavorColor(flavors?.[0])
   const emoji = getProductEmoji(productType)
 
   return (
@@ -71,13 +70,6 @@ export function CakePreview({ productType, quantity, flavors, theme, className }
               <div className="text-[6rem] drop-shadow-xl filter grayscale-[0.2]">
                 {emoji}
               </div>
-            </div>
-          )}
-
-          {/* Decoration Overlay */}
-          {decoration && (
-            <div className="absolute -top-6 animate-bounce text-4xl drop-shadow-lg">
-              {decoration}
             </div>
           )}
         </div>

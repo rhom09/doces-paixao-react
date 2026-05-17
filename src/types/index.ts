@@ -83,3 +83,18 @@ export interface SiteSettings {
   email: string
   socialLinks: SocialLink[]
 }
+
+// ── Encomenda ────────────────────────────────────────────────
+export interface SanityProductType {
+  id: string
+  name: string
+  emoji: string
+  quickQuantities: string[]
+}
+
+export interface SanityFlavor {
+  id: string
+  name: string
+  color: string
+  category: 'bolo' | 'docinhos'
+}

@@ -37,12 +37,12 @@ export async function sendOrderForm(data: OrderFormData): Promise<void> {
     Tipo: ${data.productType}
     Quantidade: ${data.quantity}
     Data do Evento: ${data.eventDate}
-    Tema/Ocasião: ${data.theme}
 
     --- PERSONALIZAÇÃO ---
     Sabores: ${data.flavors.join(', ')}
     Restrições: ${data.restrictions?.join(', ') || 'Nenhuma'}
     Mensagem p/ Embalagem: ${data.message || 'N/A'}
+    Imagem de Referência: ${data.image ? 'SIM (Enviada pelo cliente)' : 'NÃO'}
 
     --- CONFIRMAÇÃO ---
     Termos aceitos: ${data.termsAccepted ? 'SIM' : 'NÃO'}
