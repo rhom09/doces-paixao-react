@@ -21,30 +21,12 @@ const SCHEDULE = [
 export function Footer() {
   const { data: settings } = useSanity<SiteSettings>(SITE_SETTINGS_QUERY)
 
-  const socials = settings?.socialLinks || [
-    { platform: 'Instagram', icon: 'fab fa-instagram', url: 'https://www.instagram.com/_doces.paixao/' },
-    { platform: 'WhatsApp',  icon: 'fab fa-whatsapp', url: 'https://wa.me/55119985738330' },
-  ]
-
-  function handleNewsletter(e: React.FormEvent) {
-    e.preventDefault()
-    const form = e.target as HTMLFormElement
-    const btn  = form.querySelector('button') as HTMLButtonElement
-    btn.innerHTML = '<i class="fas fa-check"></i>'
-    btn.style.background = '#2db87b'
-    setTimeout(() => {
-      btn.innerHTML = '<i class="fas fa-arrow-right"></i>'
-      btn.style.background = ''
-      form.reset()
-    }, 2500)
-  }
-
   return (
     <footer className="bg-ink pt-[72px] text-white/65">
       <div className="container mx-auto max-w-[1180px] px-7">
 
         {/* Grid */}
-        <div className="grid gap-12 pb-14 border-b border-white/[0.08] sm:grid-cols-2 lg:grid-cols-[1.6fr_1fr_1fr_1.4fr]">
+        <div className="grid gap-12 pb-14 border-b border-white/[0.08] sm:grid-cols-2 lg:grid-cols-3">
 
           {/* About */}
           <div>
@@ -61,20 +43,6 @@ export function Footer() {
               com paixão em cada detalhe, ingrediente e criação.
               {settings?.address && <span className="mt-2 block italic opacity-70">{settings.address}</span>}
             </p>
-            <div className="mt-6 flex gap-2.5">
-              {socials.map((social) => (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.platform}
-                  className="flex h-9.5 w-9.5 items-center justify-center rounded-[10px] bg-white/7 text-white/50 text-[0.9rem] transition-all hover:bg-rose hover:text-white"
-                >
-                  <i className={social.icon} />
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Quick links */}
@@ -106,32 +74,6 @@ export function Footer() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h4 className="mb-5 font-body text-[0.8rem] font-bold uppercase tracking-[0.1em] text-white/35">
-              Newsletter
-            </h4>
-            <p className="mb-4 text-[0.85rem] leading-[1.65] text-white/40">
-              Receba novidades, promoções exclusivas e receitas!
-            </p>
-            <form className="flex overflow-hidden rounded-xl border border-white/10 bg-white/7" onSubmit={handleNewsletter}>
-              <input
-                type="email"
-                placeholder="Seu melhor e-mail"
-                required
-                className="flex-1 bg-transparent px-4 py-3 text-[0.85rem] text-white outline-none placeholder:text-white/30"
-              />
-              <button
-                type="submit"
-                aria-label="Assinar newsletter"
-                className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-rose text-white text-[0.9rem] transition-colors hover:bg-rose-deep"
-              >
-                <i className="fas fa-arrow-right" />
-              </button>
-            </form>
-            <p className="mt-2.5 text-[0.76rem] text-white/30">Sem spam. Cancele quando quiser.</p>
           </div>
 
         </div>

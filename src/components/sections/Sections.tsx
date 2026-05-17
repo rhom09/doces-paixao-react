@@ -1,4 +1,6 @@
-import { ALL_TESTIMONIALS_QUERY, ALL_DIFERENCIAIS_QUERY, ALL_GALLERY_ITEMS_QUERY } from '@/lib/queries'
+import { getWhatsAppLink } from '@/utils/whatsapp'
+
+// ── Diferenciais ──────────────────────────────────────────────
 import { useSanity } from '@/hooks/useSanity'
 import { Skeleton } from '@/components/ui/SkeletonCard'
 import { LabelTag, SectionHead, RevealWrapper, Stars } from '@/components/ui/index'
@@ -207,7 +209,7 @@ export function CTABand() {
           <p className="mx-auto mb-9 max-w-[480px] text-[1.05rem] font-light opacity-85">
             Entre em contato agora e vamos criar algo incrível juntos. Sua encomenda merece o melhor.
           </p>
-          <Button as="a" href="#contato" variant="white" size="lg">
+          <Button as="a" href={getWhatsAppLink()} target="_blank" rel="noopener noreferrer" variant="white" size="lg">
             <i className="fab fa-whatsapp" /> Solicitar Orçamento
           </Button>
         </RevealWrapper>
