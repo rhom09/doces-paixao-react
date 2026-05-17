@@ -1,4 +1,4 @@
-import { ALL_TESTIMONIALS_QUERY, ALL_DIFERENCIAIS_QUERY, ALL_GALLERY_ITEMS_QUERY } from '@/lib/queries'
+import { ALL_TESTIMONIALS_QUERY, ALL_DIFERENCIAIS_QUERY } from '@/lib/queries'
 import { getWhatsAppLink } from '@/utils/whatsapp'
 
 // ── Diferenciais ──────────────────────────────────────────────
@@ -9,8 +9,8 @@ import { Button } from '@/components/ui/Button'
 import { DIFERENCIAIS } from '@/data/diferenciais'
 import { GALLERY_ITEMS } from '@/data/stats'
 import { cn } from '@/utils/cn'
-import { getAvatarUrl, getGalleryImageUrl } from '@/utils/getImageUrl'
-import type { Testimonial, Diferencial, GalleryItem } from '@/types'
+import { getAvatarUrl } from '@/utils/getImageUrl'
+import type { Testimonial, Diferencial } from '@/types'
 
 // ── Diferenciais ──────────────────────────────────────────────
 const iconColors = [
@@ -70,56 +70,6 @@ export function Diferenciais() {
               </div>
               <h3 className="mb-3 font-display text-[1.2rem] text-white">{d.title}</h3>
               <p className="text-[0.87rem] leading-[1.75] text-white/50">{d.description}</p>
-            </RevealWrapper>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// ── Galeria ───────────────────────────────────────────────────
-export function Galeria() {
-  const { data: sanData, loading } = useSanity<GalleryItem[]>(ALL_GALLERY_ITEMS_QUERY)
-  const data = sanData && sanData.length > 0 ? sanData : GALLERY_ITEMS
-
-  return (
-    <section className="bg-cream py-[120px]" id="galeria">
-      <div className="container mx-auto max-w-[1180px] px-7">
-        <RevealWrapper>
-          <SectionHead
-            tag={<LabelTag variant="mint">📸 Galeria</LabelTag>}
-            title={<>Nossas <em className="italic text-rose">Criações</em></>}
-            subtitle="Um olhar sobre os momentos doces que ajudamos a criar"
-            center
-            className="mb-12"
-          />
-        </RevealWrapper>
-
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:[grid-template-rows:200px_200px]">
-          {loading ? (
-            Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className={cn('rounded-[20px] min-h-[180px]', i === 0 && 'md:col-span-2 md:row-span-2')} />
-            ))
-          ) : data.map((item, i) => (
-            <RevealWrapper
-              key={item.id}
-              delay={i * 80}
-              className={cn(
-                'group relative cursor-pointer overflow-hidden rounded-[20px]',
-                item.span === 'both' && 'md:col-span-2 md:row-span-2',
-                item.span === 'col'  && 'md:col-span-2'
-              )}
-            >
-              <img
-                src={getGalleryImageUrl(item)}
-                alt={item.alt}
-                loading="lazy"
-                className="h-full min-h-[180px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.06]"
-              />
-              <div className="absolute inset-0 flex items-end bg-gradient-to-t from-ink/75 to-transparent p-4 transition-opacity opacity-100 md:opacity-0 md:group-hover:opacity-100">
-                <span className="text-[0.82rem] font-medium text-white">{item.caption}</span>
-              </div>
             </RevealWrapper>
           ))}
         </div>

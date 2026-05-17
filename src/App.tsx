@@ -2,7 +2,7 @@ import { Hero }         from '@/components/sections/Hero'
 import { Stats }        from '@/components/sections/Stats'
 import { Sobre }        from '@/components/sections/Sobre'
 import { Produtos }     from '@/components/sections/Produtos'
-import { Diferenciais, Galeria, Depoimentos, CTABand } from '@/components/sections/Sections'
+import { Diferenciais, Depoimentos, CTABand } from '@/components/sections/Sections'
 import { Contato }      from '@/components/sections/Contato'
 import { SEO } from '@/components/ui/SEO'
 import { SugarTrail } from '@/components/effects/SugarTrail'
@@ -40,7 +40,6 @@ export default function App() {
       <Sobre />
       <Produtos />
       <Diferenciais />
-      <Galeria />
       <Depoimentos />
       <CTABand />
       <Contato />
