@@ -36,14 +36,14 @@ export function Header() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5">
-            <span
+            <img
+              src="/icons/icon.svg"
+              alt="Logo Doces Paixão"
               className={cn(
-                'flex h-9 w-9 items-center justify-center rounded-[10px] text-sm backdrop-blur-sm transition-all',
+                'flex h-9 w-9 items-center justify-center rounded-[10px] p-1 backdrop-blur-sm transition-all',
                 scrolled ? 'bg-rose-pale' : 'bg-white/18'
               )}
-            >
-              🧁
-            </span>
+            />
             <span
               className={cn(
                 'font-display text-[1.65rem] font-bold -tracking-[0.01em] transition-colors',

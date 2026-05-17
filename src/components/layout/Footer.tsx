@@ -31,9 +31,11 @@ export function Footer() {
           {/* About */}
           <div>
             <a href="#" className="mb-4 inline-flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-rose/20 text-sm">
-                🧁
-              </span>
+              <img
+                src="/icons/icon.svg"
+                alt="Logo Doces Paixão"
+                className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-rose/20 p-1"
+              />
               <span className="font-display text-[1.65rem] font-bold text-white">
                 Doces <em className="not-italic text-rose-light">Paixão</em>
               </span>
