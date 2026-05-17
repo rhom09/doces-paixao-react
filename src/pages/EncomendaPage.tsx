@@ -3,9 +3,17 @@ import { Link } from 'react-router-dom'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RevealWrapper, LabelTag, SectionHead } from '@/components/ui/index'
+import { CakePreview } from '@/components/ui/CakePreview'
 import { cn } from '@/utils/cn'
 import { usePhoneMask } from '@/hooks/usePhoneMask'
 import { sendOrderForm } from '@/services/emailService'
+import {
+  FLAVOR_COLORS,
+  RESTRICTION_ICONS,
+  QUICK_QUANTITIES,
+  getFlavorColor,
+  getProductEmoji
+} from '@/utils/cakeVisuals'
 import {
   encomendaSchema,
   EncomendaFormData,
@@ -22,8 +30,9 @@ const STEPS = [
   { id: 4, label: 'Confirmação', schema: step4Schema },
 ]
 
-const FLAVORS = ['Chocolate Belga', 'Ninho com Morango', 'Doce de Leite', 'Red Velvet', 'Pistache', 'Limão Siciliano']
-const RESTRICTIONS = ['Sem restrição', 'Sem Glúten', 'Vegano', 'Sem Lactose']
+const PRODUCT_TYPES = ['Bolo', 'Cupcakes', 'Docinhos', 'Torta', 'Especial']
+const FLAVORS = Object.keys(FLAVOR_COLORS)
+const RESTRICTIONS = Object.keys(RESTRICTION_ICONS)
 const STORAGE_KEY = 'doces_paixao_encomenda_data'
 
 export default function EncomendaPage() {
@@ -74,7 +83,7 @@ export default function EncomendaPage() {
                               STEPS[step - 1].id === 2 ? ['productType', 'quantity', 'eventDate', 'theme'] :
                               STEPS[step - 1].id === 3 ? ['flavors', 'restrictions', 'message'] :
                               ['termsAccepted']
-    
+
     const isValid = await trigger(currentStepFields as any)
     if (isValid) setStep((s) => Math.min(s + 1, 4))
   }
@@ -112,7 +121,7 @@ export default function EncomendaPage() {
   }
 
   const minDate = new Date()
-  minDate.setDate(minDate.getDate() + 2) // Changed from 7 to 2
+  minDate.setDate(minDate.getDate() + 2)
   const minDateStr = minDate.toISOString().split('T')[0]
 
   const getQuantityPlaceholder = () => {
@@ -137,7 +146,7 @@ export default function EncomendaPage() {
 
   return (
     <div className="min-h-screen bg-canvas pt-28">
-      <div className="container mx-auto max-w-[800px] px-6 py-12">
+      <div className="container mx-auto max-w-[1180px] px-6 py-12">
           <RevealWrapper>
             <SectionHead
               tag={<LabelTag>📦 Nova Encomenda</LabelTag>}
@@ -148,7 +157,7 @@ export default function EncomendaPage() {
           </RevealWrapper>
 
           {/* Progress Bar */}
-          <div className="mb-12 mt-10">
+          <div className="mx-auto mb-12 mt-10 max-w-[800px]">
             <div className="flex justify-between relative before:absolute before:top-5 before:left-0 before:h-[2px] before:w-full before:bg-border before:-z-10">
               {STEPS.map((s) => (
                 <div key={s.id} className="flex flex-col items-center gap-2 group">
@@ -168,241 +177,355 @@ export default function EncomendaPage() {
               ))}
             </div>
             <div className="mt-6 h-1 w-full overflow-hidden rounded-full bg-border-soft">
-              <div 
-                className="h-full bg-rose transition-all duration-700 ease-out shadow-[0_0_10px_rgba(196,86,107,0.3)]" 
-                style={{ width: `${((step - 1) / 3) * 100}%` }} 
+              <div
+                className="h-full bg-rose transition-all duration-700 ease-out shadow-[0_0_10px_rgba(196,86,107,0.3)]"
+                style={{ width: `${((step - 1) / 3) * 100}%` }}
               />
             </div>
           </div>
 
-          <RevealWrapper className="rounded-[32px] border border-border-soft bg-white p-6 sm:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              
-              {/* Step 1: Seus Dados */}
-              {step === 1 && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Nome completo</label>
-                      <input 
-                        {...register('name')}
-                        placeholder="Ex: Maria Silva" 
-                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.name && 'border-rose-light bg-rose-pale/30')}
-                      />
-                      {errors.name && <p className="text-[0.75rem] font-medium text-rose">{errors.name.message}</p>}
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Telefone / WhatsApp</label>
-                      <input 
-                        placeholder="(00) 00000-0000"
-                        value={phoneMask.value}
-                        onChange={phoneMask.onChange}
-                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.phone && 'border-rose-light bg-rose-pale/30')}
-                      />
-                      {errors.phone && <p className="text-[0.75rem] font-medium text-rose">{errors.phone.message}</p>}
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[0.85rem] font-bold text-ink">E-mail</label>
-                    <input 
-                      {...register('email')}
-                      placeholder="seu@email.com" 
-                      className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.email && 'border-rose-light bg-rose-pale/30')}
-                    />
-                    {errors.email && <p className="text-[0.75rem] font-medium text-rose">{errors.email.message}</p>}
-                  </div>
-                </div>
-              )}
+          <div className="grid gap-8 lg:grid-cols-[1fr_350px] items-start">
+            <RevealWrapper className="rounded-[32px] border border-border-soft bg-white p-6 sm:p-10 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+              <form onSubmit={handleSubmit(onSubmit)}>
 
-              {/* Step 2: Seu Pedido */}
-              {step === 2 && (
-                <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Tipo de Produto</label>
-                      <select 
-                        {...register('productType')}
-                        className={cn('w-full appearance-none rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.productType && 'border-rose-light bg-rose-pale/30')}
-                      >
-                        <option value="">Selecione...</option>
-                        {['Bolo', 'Cupcakes', 'Docinhos', 'Torta', 'Especial'].map(o => (
-                          <option key={o} value={o}>{o}</option>
-                        ))}
-                      </select>
-                      {errors.productType && <p className="text-[0.75rem] font-medium text-rose">{errors.productType.message}</p>}
+                {/* Step 1: Seus Dados */}
+                {step === 1 && (
+                  <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h3 className="font-display text-2xl text-ink mb-6">Informações de Contato</h3>
+                    <div className="grid gap-6 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Nome completo</label>
+                        <input
+                          {...register('name')}
+                          placeholder="Ex: Maria Silva"
+                          className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.name && 'border-rose-light bg-rose-pale/30')}
+                        />
+                        {errors.name && <p className="text-[0.75rem] font-medium text-rose">{errors.name.message}</p>}
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Telefone / WhatsApp</label>
+                        <input
+                          placeholder="(00) 00000-0000"
+                          value={phoneMask.value}
+                          onChange={phoneMask.onChange}
+                          className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.phone && 'border-rose-light bg-rose-pale/30')}
+                        />
+                        {errors.phone && <p className="text-[0.75rem] font-medium text-rose">{errors.phone.message}</p>}
+                      </div>
                     </div>
                     <div className="space-y-2">
-                    <label className="text-[0.85rem] font-bold text-ink">Quantidade</label>
-                      <input 
-                        type="text"
-                        {...register('quantity')}
-                        placeholder={getQuantityPlaceholder()}
-                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.quantity && 'border-rose-light bg-rose-pale/30')}
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">E-mail</label>
+                      <input
+                        {...register('email')}
+                        placeholder="seu@email.com"
+                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.email && 'border-rose-light bg-rose-pale/30')}
                       />
-                      {errors.quantity && <p className="text-[0.75rem] font-medium text-rose">{errors.quantity.message}</p>}
+                      {errors.email && <p className="text-[0.75rem] font-medium text-rose">{errors.email.message}</p>}
                     </div>
                   </div>
-                  <div className="grid gap-6 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Data do Evento (Mín. 2 dias)</label>
-                      <input 
-                        type="date"
-                        min={minDateStr}
-                        {...register('eventDate')}
-                        className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.eventDate && 'border-rose-light bg-rose-pale/30')}
-                      />
-                      {errors.eventDate && <p className="text-[0.75rem] font-medium text-rose">{errors.eventDate.message}</p>}
+                )}
+
+                {/* Step 2: Seu Pedido */}
+                {step === 2 && (
+                  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div>
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter mb-4 block">O que você deseja encomendar?</label>
+                      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                        {PRODUCT_TYPES.map(type => (
+                          <button
+                            key={type}
+                            type="button"
+                            onClick={() => setValue('productType', type as any, { shouldValidate: true })}
+                            className={cn(
+                              'flex flex-col items-center gap-3 rounded-3xl border-2 p-5 transition-all duration-300',
+                              'hover:scale-105 hover:shadow-md',
+                              formData.productType === type
+                                ? 'border-rose bg-rose-pale/30 shadow-[0_0_15px_rgba(196,86,107,0.2)]'
+                                : 'border-border bg-canvas hover:border-rose-light'
+                            )}
+                          >
+                            <div className="text-4xl filter drop-shadow-sm">{getProductEmoji(type)}</div>
+                            <span className="font-display text-lg font-semibold text-ink">{type}</span>
+                          </button>
+                        ))}
+                      </div>
+                      {errors.productType && <p className="mt-2 text-[0.75rem] font-medium text-rose">{errors.productType.message}</p>}
                     </div>
+
+                    <div className="grid gap-8 sm:grid-cols-2">
+                      <div className="space-y-3">
+                        <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Quantidade</label>
+                        {formData.productType && QUICK_QUANTITIES[formData.productType] && (
+                          <div className="flex flex-wrap gap-2 mb-3">
+                            {QUICK_QUANTITIES[formData.productType].map(qty => (
+                              <button
+                                key={qty}
+                                type="button"
+                                onClick={() => setValue('quantity', qty, { shouldValidate: true })}
+                                className={cn(
+                                  'rounded-full border px-3 py-1.5 text-[0.75rem] font-bold transition-all',
+                                  formData.quantity === qty
+                                    ? 'border-rose bg-rose text-white'
+                                    : 'border-border bg-white text-muted hover:border-rose-light hover:text-rose'
+                                )}
+                              >
+                                {qty}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                        <input
+                          type="text"
+                          {...register('quantity')}
+                          placeholder={getQuantityPlaceholder()}
+                          className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.quantity && 'border-rose-light bg-rose-pale/30')}
+                        />
+                        {errors.quantity && <p className="text-[0.75rem] font-medium text-rose">{errors.quantity.message}</p>}
+                      </div>
+
+                      <div className="space-y-3">
+                        <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Data do Evento</label>
+                        <input
+                          type="date"
+                          min={minDateStr}
+                          {...register('eventDate')}
+                          className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.eventDate && 'border-rose-light bg-rose-pale/30')}
+                        />
+                        {errors.eventDate && <p className="text-[0.75rem] font-medium text-rose">{errors.eventDate.message}</p>}
+                      </div>
+                    </div>
+
                     <div className="space-y-2">
-                      <label className="text-[0.85rem] font-bold text-ink">Tema / Ocasião</label>
-                      <input 
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Tema / Ocasião</label>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {['Aniversário', 'Casamento', 'Batizado', 'Formatura', 'Presente'].map(t => (
+                          <button
+                            key={t}
+                            type="button"
+                            onClick={() => setValue('theme', t, { shouldValidate: true })}
+                            className={cn(
+                              'rounded-full border px-3 py-1.5 text-[0.75rem] font-bold transition-all',
+                              formData.theme === t
+                                ? 'border-rose bg-rose text-white'
+                                : 'border-border bg-white text-muted hover:border-rose-light hover:text-rose'
+                            )}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                      <input
                         {...register('theme')}
-                        placeholder="Ex: Aniversário 1 ano, Casamento..." 
+                        placeholder="Ex: Aniversário 1 ano, Casamento..."
                         className={cn('w-full rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5', errors.theme && 'border-rose-light bg-rose-pale/30')}
                       />
                       {errors.theme && <p className="text-[0.75rem] font-medium text-rose">{errors.theme.message}</p>}
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Step 3: Personalização */}
-              {step === 3 && (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="space-y-3">
-                    <label className="text-[0.85rem] font-bold text-ink">Sabores Preferidos</label>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                      {FLAVORS.map(flavor => (
-                        <label key={flavor} className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-canvas px-4 py-3 transition-all hover:border-rose-light has-[:checked]:border-rose has-[:checked]:bg-rose-pale/30">
-                          <input type="checkbox" value={flavor} {...register('flavors')} className="h-4 w-4 rounded accent-rose" />
-                          <span className="text-[0.82rem] font-medium text-ink-soft">{flavor}</span>
+                {/* Step 3: Personalização */}
+                {step === 3 && (
+                  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div className="space-y-4">
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Escolha os Sabores</label>
+                      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                        {FLAVORS.map(flavor => (
+                          <label
+                            key={flavor}
+                            className={cn(
+                              'flex flex-col items-center gap-3 rounded-2xl border-2 p-4 cursor-pointer transition-all duration-300',
+                              'hover:scale-105',
+                              formData.flavors?.includes(flavor)
+                                ? 'border-rose bg-rose-pale/30 shadow-md'
+                                : 'border-border bg-canvas hover:border-rose-light'
+                            )}
+                          >
+                            <div
+                              className="h-10 w-10 rounded-full shadow-inner border border-black/5"
+                              style={{ backgroundColor: getFlavorColor(flavor) }}
+                            />
+                            <span className="text-[0.82rem] font-bold text-ink text-center leading-tight">{flavor}</span>
+                            <input type="checkbox" value={flavor} {...register('flavors')} className="hidden" />
+                          </label>
+                        ))}
+                      </div>
+                      {errors.flavors && <p className="text-[0.75rem] font-medium text-rose">{errors.flavors.message}</p>}
+                    </div>
+
+                    <div className="space-y-4">
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Restrições Alimentares</label>
+                      <div className="flex flex-wrap gap-3">
+                        {RESTRICTIONS.map(r => (
+                          <label
+                            key={r}
+                            className={cn(
+                              'flex cursor-pointer items-center gap-3 rounded-full border-2 px-5 py-2.5 transition-all duration-300',
+                              'hover:border-mint-soft',
+                              formData.restrictions?.includes(r)
+                                ? 'border-mint-deep bg-mint-pale shadow-sm'
+                                : 'border-border bg-canvas'
+                            )}
+                          >
+                            <span className="text-xl">{RESTRICTION_ICONS[r]}</span>
+                            <span className="text-[0.82rem] font-bold text-ink-soft uppercase tracking-tighter">{r}</span>
+                            <input
+                              type="checkbox"
+                              value={r}
+                              checked={formData.restrictions?.includes(r)}
+                              onChange={() => handleRestrictionChange(r)}
+                              className="hidden"
+                            />
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Mensagem na embalagem (Máx. 100 chars)</label>
+                      <textarea
+                        {...register('message')}
+                        placeholder="Deixe uma mensagem carinhosa..."
+                        className="w-full h-24 resize-none rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5"
+                      />
+                      {errors.message && <p className="text-[0.75rem] font-medium text-rose">{errors.message.message}</p>}
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-[0.85rem] font-bold text-ink uppercase tracking-tighter">Imagem de Referência (Opcional)</label>
+                      <div className="rounded-2xl border-2 border-dashed border-border p-6 text-center transition-colors hover:bg-canvas">
+                        <input type="file" className="hidden" id="file-upload" />
+                        <label htmlFor="file-upload" className="cursor-pointer">
+                          <i className="fas fa-cloud-upload-alt text-2xl text-rose mb-2 block" />
+                          <span className="text-sm font-medium text-muted block">Clique para enviar uma foto de inspiração</span>
+                          <small className="text-[0.7rem] text-muted/60 uppercase font-bold mt-1 block">JPG, PNG até 5MB</small>
                         </label>
-                      ))}
-                    </div>
-                    {errors.flavors && <p className="text-[0.75rem] font-medium text-rose">{errors.flavors.message}</p>}
-                  </div>
-
-                  <div className="space-y-3">
-                    <label className="text-[0.85rem] font-bold text-ink">Restrições Alimentares</label>
-                    <div className="flex flex-wrap gap-3">
-                      {RESTRICTIONS.map(r => (
-                        <label key={r} className="flex cursor-pointer items-center gap-2 rounded-full border border-border bg-canvas px-4 py-2 transition-all hover:border-mint-soft has-[:checked]:border-mint-deep has-[:checked]:bg-mint-pale">
-                          <input 
-                            type="checkbox" 
-                            value={r} 
-                            checked={formData.restrictions?.includes(r)}
-                            onChange={() => handleRestrictionChange(r)}
-                            className="h-4 w-4 rounded accent-mint-deep" 
-                          />
-                          <span className="text-[0.82rem] font-medium text-ink-soft">{r}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[0.85rem] font-bold text-ink">Mensagem na embalagem (Máx. 100 chars)</label>
-                    <textarea 
-                      {...register('message')}
-                      placeholder="Deixe uma mensagem carinhosa..."
-                      className="w-full resize-none rounded-2xl border border-border bg-canvas px-5 py-3.5 outline-none transition-all focus:border-rose focus:ring-4 focus:ring-rose/5"
-                    />
-                    {errors.message && <p className="text-[0.75rem] font-medium text-rose">{errors.message.message}</p>}
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[0.85rem] font-bold text-ink">Imagem de Referência (Opcional)</label>
-                    <input type="file" className="w-full text-sm text-muted block file:mr-4 file:py-2.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-rose-pale file:text-rose hover:file:bg-rose-pale/80" />
-                  </div>
-                </div>
-              )}
-
-              {/* Step 4: Revisão */}
-              {step === 4 && (
-                <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="rounded-2xl bg-canvas p-6 space-y-4 border border-border">
-                    <h3 className="font-bold text-ink uppercase tracking-wider text-[0.75rem]">Resumo do Pedido</h3>
-                    <div className="grid gap-4 sm:grid-cols-2 text-[0.88rem]">
-                      <div>
-                        <p className="text-muted text-[0.7rem] uppercase font-bold">Contato</p>
-                        <p className="text-ink font-medium">{formData.name}</p>
-                        <p className="text-ink-soft">{formData.phone} • {formData.email}</p>
-                      </div>
-                      <div>
-                        <p className="text-muted text-[0.7rem] uppercase font-bold">Produto</p>
-                        <p className="text-ink font-medium">{formData.productType} ({formData.quantity}x)</p>
-                        <p className="text-ink-soft">{formData.theme} • {formData.eventDate}</p>
-                      </div>
-                      <div className="sm:col-span-2">
-                        <p className="text-muted text-[0.7rem] uppercase font-bold">Personalização</p>
-                        <p className="text-ink-soft">
-                          <span className="font-medium text-ink">Sabores:</span> {formData.flavors?.join(', ') || 'Nenhum'}
-                        </p>
-                        {(formData.restrictions?.length ?? 0) > 0 && (
-                          <p className="text-ink-soft">
-                            <span className="font-medium text-ink">Restrições:</span> {formData.restrictions?.join(', ')}
-                          </p>
-                        )}
                       </div>
                     </div>
                   </div>
+                )}
 
-                  <label className="flex cursor-pointer items-start gap-4">
-                    <input type="checkbox" {...register('termsAccepted')} className="mt-1 h-5 w-5 rounded border-border accent-rose" />
-                    <span className="text-[0.85rem] leading-relaxed text-muted">
-                      Aceito que a encomenda está sujeita a confirmação via WhatsApp e que a data solicitada pode ser alterada conforme disponibilidade.
-                    </span>
-                  </label>
-                  {errors.termsAccepted && <p className="text-[0.75rem] font-medium text-rose">{errors.termsAccepted.message}</p>}
-
-                  {status === 'error' && (
-                    <div className="rounded-xl bg-rose-pale p-4 text-center text-[0.85rem] text-rose font-medium">
-                      <i className="fas fa-exclamation-circle mr-2" /> Erro ao processar envio. Tente novamente ou entre em contato pelo IG/WhatsApp.
+                {/* Step 4: Revisão */}
+                {step === 4 && (
+                  <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h3 className="font-display text-2xl text-ink">Quase lá! Revise seu pedido</h3>
+                    <div className="rounded-2xl bg-canvas p-6 space-y-5 border border-border">
+                      <div className="grid gap-6 sm:grid-cols-2 text-[0.88rem]">
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Contato</p>
+                            <p className="text-ink font-bold text-lg">{formData.name}</p>
+                            <p className="text-ink-soft">{formData.phone}</p>
+                            <p className="text-ink-soft">{formData.email}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Data e Ocasião</p>
+                            <p className="text-ink font-semibold">{new Date(formData.eventDate || '').toLocaleDateString('pt-BR')}</p>
+                            <p className="text-rose font-medium italic">{formData.theme}</p>
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div>
+                            <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Pedido Principal</p>
+                            <div className="flex items-center gap-2">
+                              <span className="text-2xl">{getProductEmoji(formData.productType)}</span>
+                              <p className="text-ink font-bold text-lg">{formData.productType}</p>
+                            </div>
+                            <p className="text-ink-soft">Quantidade: <span className="font-semibold">{formData.quantity}</span></p>
+                          </div>
+                          <div>
+                            <p className="text-muted text-[0.7rem] uppercase font-bold tracking-widest mb-1">Personalização</p>
+                            <p className="text-ink-soft">
+                              <span className="font-medium text-ink">Sabores:</span> {formData.flavors?.join(', ') || 'A combinar'}
+                            </p>
+                            {(formData.restrictions?.length ?? 0) > 0 && (
+                              <p className="text-ink-soft mt-1">
+                                <span className="font-medium text-ink">Restrições:</span> {formData.restrictions?.join(', ')}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+                    <label className="flex cursor-pointer items-start gap-4 p-4 rounded-2xl bg-rose-pale/20 border border-rose-pale transition-all hover:bg-rose-pale/40">
+                      <input type="checkbox" {...register('termsAccepted')} className="mt-1.5 h-5 w-5 rounded border-border accent-rose" />
+                      <span className="text-[0.85rem] leading-relaxed text-muted">
+                        Entendo que esta é uma <strong>solicitação de orçamento</strong>. Minha encomenda só será confirmada após o contato da equipe via WhatsApp e validação da disponibilidade para a data.
+                      </span>
+                    </label>
+                    {errors.termsAccepted && <p className="text-[0.75rem] font-medium text-rose">{errors.termsAccepted.message}</p>}
+
+                    {status === 'error' && (
+                      <div className="rounded-xl bg-rose-pale p-4 text-center text-[0.85rem] text-rose font-medium">
+                        <i className="fas fa-exclamation-circle mr-2" /> Erro ao processar envio. Tente novamente ou entre em contato pelo Instagram.
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Step Buttons */}
+                <div className="mt-10 flex gap-4 pt-8 border-t border-border-soft">
+                  {step > 1 && (
+                    <button
+                      type="button"
+                      onClick={prevStep}
+                      className="flex-1 rounded-2xl border-2 border-border py-4 font-bold text-muted transition-all hover:bg-canvas hover:text-ink active:scale-95"
+                    >
+                      ← Voltar
+                    </button>
+                  )}
+
+                  {step < 4 ? (
+                    <button
+                      type="button"
+                      onClick={nextStep}
+                      className="flex-[2] rounded-2xl bg-rose py-4 font-bold text-white shadow-md transition-all hover:-translate-y-1 hover:bg-rose-deep active:scale-95"
+                    >
+                      Próxima Etapa →
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      disabled={status === 'loading'}
+                      className="flex-[2] rounded-2xl bg-mint-deep py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-mint-deep/90 disabled:opacity-50 active:scale-95"
+                    >
+                      {status === 'loading' ? (
+                        <><i className="fas fa-spinner animate-spin mr-2" /> Enviando...</>
+                      ) : (
+                        <>Finalizar Solicitação 🎉</>
+                      )}
+                    </button>
                   )}
                 </div>
-              )}
 
-              {/* Step Buttons */}
-              <div className="mt-10 flex gap-4 pt-6 border-t border-border-soft">
-                {step > 1 && (
-                  <button
-                    type="button"
-                    onClick={prevStep}
-                    className="flex-1 rounded-2xl border border-border py-4 font-bold text-muted transition-all hover:bg-canvas hover:text-ink active:scale-95"
-                  >
-                    ← Voltar
-                  </button>
-                )}
-                
-                {step < 4 ? (
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    className="flex-[2] rounded-2xl bg-rose py-4 font-bold text-white shadow-md transition-all hover:-translate-y-1 hover:bg-rose-deep active:scale-95"
-                  >
-                    Próxima Etapa →
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={status === 'loading'}
-                    className="flex-[2] rounded-2xl bg-mint-deep py-4 font-bold text-white shadow-lg transition-all hover:-translate-y-1 hover:bg-mint-deep/90 disabled:opacity-50 active:scale-95"
-                  >
-                    {status === 'loading' ? (
-                      <><i className="fas fa-spinner animate-spin mr-2" /> Enviando...</>
-                    ) : (
-                      <>Confirmar Encomenda 🎉</>
-                    )}
-                  </button>
-                )}
-              </div>
+              </form>
+            </RevealWrapper>
 
-            </form>
-          </RevealWrapper>
+            {/* Sidebar Preview */}
+            <aside className="hidden lg:block">
+              <CakePreview
+                productType={formData.productType}
+                quantity={formData.quantity}
+                flavors={formData.flavors}
+                theme={formData.theme}
+              />
+            </aside>
 
-          <p className="mt-8 text-center text-[0.8rem] text-muted">
-            Dúvidas? <a href="#" className="font-bold text-rose underline underline-offset-4">Fale conosco pelo WhatsApp</a>
+            {/* Mobile Preview Area */}
+            <div className="lg:hidden">
+              <CakePreview
+                productType={formData.productType}
+                quantity={formData.quantity}
+                flavors={formData.flavors}
+                theme={formData.theme}
+                className="static top-0"
+              />
+            </div>
+          </div>
+
+          <p className="mt-12 text-center text-[0.85rem] text-muted">
+            Deseja um projeto exclusivo? <a href="#" className="font-bold text-rose hover:underline underline-offset-4">Fale diretamente com nossa Cake Designer</a>
           </p>
         </div>
       </div>
